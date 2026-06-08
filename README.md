@@ -55,6 +55,21 @@ Build and start the server:
 docker compose up -d --build
 ```
 
+The first start downloads the dedicated server into the
+`reforger-server_reforger-server` Docker volume. Later starts skip SteamCMD by
+default so EC2 boots are faster. To intentionally update the dedicated server,
+stop the service and run SteamCMD against the persisted volume:
+
+```sh
+docker compose down
+docker compose run --rm --entrypoint /opt/steamcmd/steamcmd.sh reforger \
+  +force_install_dir /home/steam/reforger \
+  +login anonymous \
+  +app_update 1874900 \
+  +quit
+docker compose up -d
+```
+
 The service retries failed starts up to five times. If the server stops after repeated failures, check the logs before starting it again.
 
 Follow logs:
@@ -75,3 +90,13 @@ The dedicated server files and profile data are stored in named Docker volumes:
 reforger-server_reforger-server
 reforger-server_reforger-profile
 ```
+
+## AWS EC2
+
+AWS host setup, systemd units, and the 30-minute zero-player shutdown watcher live in:
+
+```text
+deploy/aws
+```
+
+See `deploy/aws/README.md` before installing on an EC2 instance.

@@ -1,29 +1,64 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Build the SteamCMD command incrementally so branch and validation settings can
-# be controlled from Compose environment variables.
-steamcmd_args=(
-  +force_install_dir "${SERVER_DIR}"
-  +login anonymous
-)
+server_executable="${SERVER_EXECUTABLE:-${SERVER_DIR}/ArmaReforgerServer}"
+steam_update_on_start="${STEAM_UPDATE_ON_START:-missing}"
+steam_validate="${STEAM_VALIDATE:-0}"
+should_update=0
 
-steamcmd_args+=(+app_update "${STEAM_APP_ID}")
-
-# Keep the default on the public branch, but allow Compose overrides for public
-# beta branches.
-if [[ -n "${STEAM_BRANCH}" && "${STEAM_BRANCH}" != "public" ]]; then
-  steamcmd_args+=(-beta "${STEAM_BRANCH}")
-fi
+# Normal EC2 starts should be fast: if the named Docker volume already contains
+# the server executable, skip SteamCMD and launch immediately. Set
+# STEAM_UPDATE_ON_START=always when intentionally updating the dedicated server.
+case "${steam_update_on_start,,}" in
+  1 | true | yes | always)
+    should_update=1
+    ;;
+  0 | false | no | never)
+    should_update=0
+    ;;
+  missing | if-missing)
+    if [[ ! -x "${server_executable}" ]]; then
+      should_update=1
+    fi
+    ;;
+  *)
+    echo "Invalid STEAM_UPDATE_ON_START value: ${steam_update_on_start}" >&2
+    echo "Use one of: missing, always, never." >&2
+    exit 64
+    ;;
+esac
 
 # Validation is useful after a corrupted install, but it slows normal starts.
-if [[ "${STEAM_VALIDATE}" == "1" || "${STEAM_VALIDATE}" == "true" ]]; then
-  steamcmd_args+=(validate)
+if [[ "${steam_validate,,}" == "1" || "${steam_validate,,}" == "true" ]]; then
+  should_update=1
 fi
 
-steamcmd_args+=(+quit)
+if [[ "${should_update}" == "1" ]]; then
+  # Build the SteamCMD command incrementally so branch and validation settings can
+  # be controlled from Compose environment variables.
+  steamcmd_args=(
+    +force_install_dir "${SERVER_DIR}"
+    +login anonymous
+  )
 
-"${STEAMCMD_DIR}/steamcmd.sh" "${steamcmd_args[@]}"
+  steamcmd_args+=(+app_update "${STEAM_APP_ID}")
+
+  # Keep the default on the public branch, but allow Compose overrides for public
+  # beta branches.
+  if [[ -n "${STEAM_BRANCH}" && "${STEAM_BRANCH}" != "public" ]]; then
+    steamcmd_args+=(-beta "${STEAM_BRANCH}")
+  fi
+
+  if [[ "${steam_validate,,}" == "1" || "${steam_validate,,}" == "true" ]]; then
+    steamcmd_args+=(validate)
+  fi
+
+  steamcmd_args+=(+quit)
+
+  "${STEAMCMD_DIR}/steamcmd.sh" "${steamcmd_args[@]}"
+else
+  echo "Skipping SteamCMD update; ${server_executable} already exists."
+fi
 
 # Some Steamworks-enabled dedicated servers look for steamclient.so under the
 # user's .steam SDK paths rather than directly under the SteamCMD install.
@@ -43,8 +78,6 @@ fi
 if [[ -n "${FREEDOM_FIGHTERS_CONFIG_FILE:-}" && -f "${FREEDOM_FIGHTERS_CONFIG_FILE}" ]]; then
   cp "${FREEDOM_FIGHTERS_CONFIG_FILE}" "${PROFILE_DIR}/FreedomFighters_ServerConfig.json"
 fi
-
-server_executable="${SERVER_EXECUTABLE:-${SERVER_DIR}/ArmaReforgerServer}"
 
 # Fail before launch if SteamCMD did not produce the expected server binary.
 if [[ ! -x "${server_executable}" ]]; then

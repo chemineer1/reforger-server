@@ -1,2 +1,4 @@
 config/server.json
 config/FreedomFighters_ServerConfig.json
+config/ec2-idle.env
+__pycache__/

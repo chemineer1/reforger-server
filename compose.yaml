@@ -15,6 +15,9 @@ services:
       # Stable Arma Reforger dedicated server app ID.
       STEAM_APP_ID: "1874900"
       STEAM_BRANCH: public
+      # Fast EC2 restarts: download the server only when the persisted server
+      # volume is empty. Set to "always" when intentionally updating.
+      STEAM_UPDATE_ON_START: missing
       # Set to "1" when you need SteamCMD to verify all server files.
       STEAM_VALIDATE: "0"
       SERVER_MAX_FPS: "60"

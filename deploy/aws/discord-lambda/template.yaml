@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Discord slash-command control for the Reforger EC2 instance.
+
+Parameters:
+  InstanceId:
+    Type: String
+    Description: EC2 instance ID that runs the Reforger server.
+  DiscordPublicKey:
+    Type: String
+    NoEcho: true
+    Description: Discord application public key.
+  DiscordAllowedUserIds:
+    Type: String
+    Default: ""
+    Description: Comma-separated Discord user IDs allowed to run commands. Empty allows any guild user with command access.
+
+Resources:
+  DiscordControlFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: python3.12
+      Handler: app.handler
+      CodeUri: .
+      Timeout: 10
+      MemorySize: 128
+      Environment:
+        Variables:
+          EC2_INSTANCE_ID: !Ref InstanceId
+          DISCORD_PUBLIC_KEY: !Ref DiscordPublicKey
+          DISCORD_ALLOWED_USER_IDS: !Ref DiscordAllowedUserIds
+      FunctionUrlConfig:
+        AuthType: NONE
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - ec2:DescribeInstances
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - ec2:StartInstances
+                - ec2:StopInstances
+              Resource: !Sub arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:instance/${InstanceId}
+
+Outputs:
+  DiscordInteractionsUrl:
+    Description: Put this URL in Discord as the Interactions Endpoint URL.
+    Value: !GetAtt DiscordControlFunctionUrl.FunctionUrl
