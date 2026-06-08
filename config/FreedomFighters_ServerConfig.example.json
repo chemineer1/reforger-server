@@ -1,0 +1,10 @@
+{
+  "discord": {
+    "webhookUrl": "",
+    "includeIngameDate": true,
+    "useQuote": true,
+    "doorKeeper": true
+  },
+  "noBackend": false,
+  "devMode": false
+}

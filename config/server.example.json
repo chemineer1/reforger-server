@@ -4,18 +4,25 @@
   "publicAddress": "",
   "publicPort": 2001,
   "a2s": {
-    "address": "",
+    "address": "0.0.0.0",
     "port": 17777
   },
+  "rcon": {
+    "address": "0.0.0.0",
+    "port": 19999,
+    "password": "change-me",
+    "permission": "monitor",
+    "blacklist": [],
+    "whitelist": []
+  },
   "game": {
-    "name": "Reforger Docker Server",
+    "name": "Freedom Fighters Docker Server",
     "password": "",
     "passwordAdmin": "change-me",
     "admins": [],
-    "scenarioId": "{ECC61978EDCC2B5A}Missions/23_Campaign.conf",
-    "maxPlayers": 32,
+    "scenarioId": "{64B2F8D8059EE270}Missions/FreedomFighters/Everon.conf",
+    "maxPlayers": 10,
     "visible": true,
-    "crossPlatform": true,
     "gameProperties": {
       "serverMaxViewDistance": 2500,
       "serverMinGrassDistance": 50,
@@ -25,15 +32,13 @@
       "battlEye": true,
       "VONDisableUI": false,
       "VONDisableDirectSpeechUI": false,
-      "VONCanTransmitCrossFaction": false
+      "VONCanTransmitCrossFaction": true
     },
-    "mods": []
-  },
-  "operating": {
-    "lobbyPlayerSynchronise": true,
-    "disableServerShutdown": false,
-    "joinQueue": {
-      "maxSize": 0
-    }
+    "mods": [
+      {
+        "modId": "CAFEBEEFF0CACC1A",
+        "name": "FreedomFighters"
+      }
+    ]
   }
 }

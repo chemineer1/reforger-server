@@ -17,6 +17,7 @@ ENV LANG=C.UTF-8 \
     SERVER_DIR=/home/steam/reforger \
     PROFILE_DIR=/home/steam/profile \
     CONFIG_FILE=/home/steam/configs/server.json \
+    FREEDOM_FIGHTERS_CONFIG_FILE=/home/steam/configs/FreedomFighters_ServerConfig.json \
     STEAM_APP_ID=1874900 \
     STEAM_BRANCH=public \
     STEAM_VALIDATE=0 \
