@@ -1,0 +1,39 @@
+{
+  "bindAddress": "",
+  "bindPort": 2001,
+  "publicAddress": "",
+  "publicPort": 2001,
+  "a2s": {
+    "address": "",
+    "port": 17777
+  },
+  "game": {
+    "name": "Reforger Docker Server",
+    "password": "",
+    "passwordAdmin": "change-me",
+    "admins": [],
+    "scenarioId": "{ECC61978EDCC2B5A}Missions/23_Campaign.conf",
+    "maxPlayers": 32,
+    "visible": true,
+    "crossPlatform": true,
+    "gameProperties": {
+      "serverMaxViewDistance": 2500,
+      "serverMinGrassDistance": 50,
+      "networkViewDistance": 1500,
+      "disableThirdPerson": false,
+      "fastValidation": true,
+      "battlEye": true,
+      "VONDisableUI": false,
+      "VONDisableDirectSpeechUI": false,
+      "VONCanTransmitCrossFaction": false
+    },
+    "mods": []
+  },
+  "operating": {
+    "lobbyPlayerSynchronise": true,
+    "disableServerShutdown": false,
+    "joinQueue": {
+      "maxSize": 0
+    }
+  }
+}
