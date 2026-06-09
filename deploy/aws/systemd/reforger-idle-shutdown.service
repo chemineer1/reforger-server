@@ -19,7 +19,7 @@ Environment=STARTUP_GRACE_SECONDS=600
 Environment=IDLE_ON_QUERY_FAILURE=1
 Environment="SHUTDOWN_COMMAND=/sbin/shutdown -h now"
 EnvironmentFile=-/opt/reforger-server/config/ec2-idle.env
-ExecStart=/usr/bin/python3 /opt/reforger-server/deploy/aws/reforger_idle_shutdown.py
+ExecStart=/usr/bin/python3 /opt/reforger-server/deploy/aws/idle-shutdown/reforger_idle_shutdown.py
 Restart=always
 RestartSec=30
 

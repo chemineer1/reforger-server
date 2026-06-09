@@ -100,3 +100,18 @@ deploy/aws
 ```
 
 See `deploy/aws/README.md` before installing on an EC2 instance.
+
+## Project Layout
+
+```text
+.
+|-- compose.yaml                 # Local and EC2 Docker Compose service
+|-- Dockerfile                   # Dedicated server container image
+|-- docker-entrypoint.sh         # Container startup and SteamCMD/update logic
+|-- config/                      # Tracked example configs; local secrets are ignored
+`-- deploy/aws/
+    |-- install-systemd.sh       # Installs the host services on EC2
+    |-- systemd/                 # Host service units
+    |-- idle-shutdown/           # Zero-player EC2 shutdown watcher
+    `-- discord-lambda/          # Optional Discord slash-command Lambda
+```

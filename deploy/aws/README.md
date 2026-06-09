@@ -112,6 +112,16 @@ The included systemd units expect the repository at:
 /opt/reforger-server
 ```
 
+The AWS deployment files are grouped by responsibility:
+
+```text
+deploy/aws/
+|-- install-systemd.sh       # Copies and enables host services
+|-- systemd/                 # systemd unit files installed into /etc/systemd/system
+|-- idle-shutdown/           # Python watcher that shuts down an idle EC2 host
+`-- discord-lambda/          # Optional Discord slash-command Lambda
+```
+
 ## Install Services
 
 From `/opt/reforger-server`:
@@ -142,7 +152,7 @@ The watcher queries `127.0.0.1:19999` using Reforger RCON and runs `#players`.
 If the server reports zero players continuously for 30 minutes, it shuts down
 the OS.
 
-The defaults are set in `reforger-idle-shutdown.service`:
+The defaults are set in `deploy/aws/systemd/reforger-idle-shutdown.service`:
 
 ```text
 PLAYER_COUNT_SOURCE=rcon
