@@ -9,7 +9,7 @@ services:
     # Use Docker's built-in init wrapper instead of baking tini into the image.
     init: true
     # Retry transient failures, but do not loop forever on bad config or mods.
-    restart: on-failure:5
+    restart: always
     stop_grace_period: 90s
     environment:
       # Stable Arma Reforger dedicated server app ID.
