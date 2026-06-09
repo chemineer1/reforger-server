@@ -40,5 +40,12 @@
         "name": "FreedomFighters"
       }
     ]
+  },
+  "operating": {
+    "lobbyPlayerSynchronise": true,
+    "disableServerShutdown": true,
+    "joinQueue": {
+      "maxSize": 0
+    }
   }
 }
