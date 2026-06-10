@@ -63,6 +63,32 @@ Omit `DISCORD_GUILD_ID` to register globally.
 
 ## Permissions
 
+### SAM Deployer
+
+The AWS identity running `sam deploy` needs permission to manage the
+CloudFormation stack and upload build artifacts to S3. SAM uses S3 as a
+deployment staging bucket for the Lambda ZIP, even though the Lambda does not
+use S3 at runtime.
+
+At minimum, the deployer needs access to:
+
+```text
+cloudformation:*
+s3:CreateBucket
+s3:GetObject
+s3:PutObject
+s3:DeleteObject
+s3:ListBucket
+iam:*
+lambda:*
+```
+
+If using `sam deploy --resolve-s3`, SAM creates and manages a helper stack named
+`aws-sam-cli-managed-default` for its artifact bucket. If that stack is stuck in
+`ROLLBACK_COMPLETE`, delete it and rerun `sam deploy --resolve-s3`.
+
+### Lambda Runtime Role
+
 The Lambda role is limited to:
 
 ```text
