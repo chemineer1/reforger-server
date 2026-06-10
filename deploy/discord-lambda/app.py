@@ -140,7 +140,7 @@ def subcommand_name(interaction):
     return interaction.get("data", {}).get("name")
 
 
-def handler(event, context):
+def lambda_handler(event, context):
     try:
         if not verify_discord_request(event):
             return response(401, {"error": "invalid request signature"})

@@ -100,7 +100,7 @@ it once so systemd owns the lifecycle from here on:
 
 ```sh
 docker compose down
-deploy/aws/install-systemd.sh
+deploy/install-systemd.sh
 sudo systemctl start reforger-server.service reforger-idle-shutdown.service
 ```
 
@@ -115,7 +115,7 @@ The included systemd units expect the repository at:
 The AWS deployment files are grouped by responsibility:
 
 ```text
-deploy/aws/
+deploy/
 |-- install-systemd.sh       # Copies and enables host services
 |-- systemd/                 # systemd unit files installed into /etc/systemd/system
 |-- idle-shutdown/           # Python watcher that shuts down an idle EC2 host
@@ -127,7 +127,7 @@ deploy/aws/
 From `/opt/reforger-server`:
 
 ```sh
-deploy/aws/install-systemd.sh
+deploy/install-systemd.sh
 sudo systemctl start reforger-server.service reforger-idle-shutdown.service
 ```
 
@@ -152,7 +152,7 @@ The watcher queries `127.0.0.1:19999` using Reforger RCON and runs `#players`.
 If the server reports zero players continuously for 30 minutes, it shuts down
 the OS.
 
-The defaults are set in `deploy/aws/systemd/reforger-idle-shutdown.service`:
+The defaults are set in `deploy/systemd/reforger-idle-shutdown.service`:
 
 ```text
 PLAYER_COUNT_SOURCE=rcon
@@ -192,7 +192,7 @@ Slash-command control for starting, stopping, and checking the EC2 instance is
 in:
 
 ```text
-deploy/aws/discord-lambda
+deploy/discord-lambda
 ```
 
-See `deploy/aws/discord-lambda/README.md`.
+See `deploy/discord-lambda/README.md`.

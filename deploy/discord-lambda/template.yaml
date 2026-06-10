@@ -20,7 +20,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Runtime: python3.12
-      Handler: app.handler
+      Handler: app.lambda_handler
       CodeUri: .
       Timeout: 10
       MemorySize: 128
@@ -42,6 +42,8 @@ Resources:
                 - ec2:StartInstances
                 - ec2:StopInstances
               Resource: !Sub arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:instance/${InstanceId}
+    Metadata:
+      BuildMethod: python-uv
 
 Outputs:
   DiscordInteractionsUrl:

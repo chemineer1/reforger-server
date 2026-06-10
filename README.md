@@ -96,10 +96,10 @@ reforger-server_reforger-profile
 AWS host setup, systemd units, and the 30-minute zero-player shutdown watcher live in:
 
 ```text
-deploy/aws
+deploy
 ```
 
-See `deploy/aws/README.md` before installing on an EC2 instance.
+See `deploy/README.md` before installing on an EC2 instance.
 
 ## Project Layout
 
@@ -109,7 +109,7 @@ See `deploy/aws/README.md` before installing on an EC2 instance.
 |-- Dockerfile                   # Dedicated server container image
 |-- docker-entrypoint.sh         # Container startup and SteamCMD/update logic
 |-- config/                      # Tracked example configs; local secrets are ignored
-`-- deploy/aws/
+`-- deploy/
     |-- install-systemd.sh       # Installs the host services on EC2
     |-- systemd/                 # Host service units
     |-- idle-shutdown/           # Zero-player EC2 shutdown watcher

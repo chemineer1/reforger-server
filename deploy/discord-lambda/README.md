@@ -33,8 +33,8 @@ Allowed Discord user IDs, optional
 Build and deploy with AWS SAM:
 
 ```sh
-cd deploy/aws/discord-lambda
-sam build
+cd deploy/discord-lambda
+sam build --beta-features
 sam deploy --guided \
   --parameter-overrides \
     InstanceId=i-xxxxxxxxxxxxxxxxx \
@@ -56,7 +56,7 @@ For fast iteration, register the command to one guild:
 export DISCORD_APP_ID=your-application-id
 export DISCORD_BOT_TOKEN=your-bot-token
 export DISCORD_GUILD_ID=your-test-guild-id
-python3 register_commands.py
+uv run register_commands.py
 ```
 
 Omit `DISCORD_GUILD_ID` to register globally.
