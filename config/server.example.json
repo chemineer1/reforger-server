@@ -21,7 +21,7 @@
     "passwordAdmin": "change-me",
     "admins": [],
     "scenarioId": "{64B2F8D8059EE270}Missions/FreedomFighters/Everon.conf",
-    "maxPlayers": 10,
+    "maxPlayers": 8,
     "visible": true,
     "gameProperties": {
       "serverMaxViewDistance": 2500,

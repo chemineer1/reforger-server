@@ -49,6 +49,28 @@ config/FreedomFighters_ServerConfig.json
 
 It is copied into the server profile volume as `FreedomFighters_ServerConfig.json` on startup, which is where the mod expects it.
 
+To enable Freedom Fighters status updates in Discord, create or edit that file
+from the tracked example:
+
+```sh
+cp config/FreedomFighters_ServerConfig.example.json config/FreedomFighters_ServerConfig.json
+```
+
+Then set `discord.webhookUrl` to a Discord webhook URL:
+
+```json
+{
+  "discord": {
+    "webhookUrl": "https://discord.com/api/webhooks/..."
+  }
+}
+```
+
+Get the webhook URL from Discord by opening the target channel's settings, then
+**Integrations** -> **Webhooks** -> **New Webhook** or an existing webhook ->
+**Copy Webhook URL**. Keep this URL private; anyone with it can post to that
+channel.
+
 Build and start the server:
 
 ```sh
@@ -69,6 +91,10 @@ docker compose run --rm --entrypoint /opt/steamcmd/steamcmd.sh reforger \
   +quit
 docker compose up -d
 ```
+
+On an EC2 host installed with the systemd units, use the update procedure in
+`deploy/README.md` so the `reforger-server` and idle-shutdown services are
+stopped and restarted cleanly around the SteamCMD update.
 
 The service retries failed starts up to five times. If the server stops after repeated failures, check the logs before starting it again.
 

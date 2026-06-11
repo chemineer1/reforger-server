@@ -148,25 +148,34 @@ journalctl -u reforger-idle-shutdown.service -f
 
 ## Idle Shutdown
 
-The watcher queries `127.0.0.1:19999` using Reforger RCON and runs `#players`.
-If the server reports zero players continuously for 30 minutes, it shuts down
-the OS.
+The watcher checks the Reforger player count once per minute. By default it
+tries `127.0.0.1:19999` using Reforger RCON and runs `#players`; if that query
+fails, it falls back to the Steam A2S endpoint on `127.0.0.1:17777`. If a
+configured source reports zero players continuously for 30 minutes, it shuts
+down the OS.
 
 The defaults are set in `deploy/systemd/reforger-idle-shutdown.service`:
 
 ```text
-PLAYER_COUNT_SOURCE=rcon
+PLAYER_COUNT_SOURCE=rcon,a2s
 RCON_HOST=127.0.0.1
 RCON_PORT=19999
+A2S_HOST=127.0.0.1
+A2S_PORT=17777
 IDLE_SECONDS=1800
 CHECK_INTERVAL_SECONDS=60
 STARTUP_GRACE_SECONDS=600
-IDLE_ON_QUERY_FAILURE=1
+IDLE_ON_QUERY_FAILURE=0
 ```
 
-`IDLE_ON_QUERY_FAILURE=1` means a broken or unreachable local server also stops
-the instance after the startup grace period plus idle threshold. Set it to `0`
-if you only want confirmed `0/N` A2S responses to count as idle.
+`PLAYER_COUNT_SOURCE` can be `rcon`, `a2s`, or an ordered fallback list such as
+`rcon,a2s`. You do not need both RCON and A2S, but keeping A2S as a fallback
+prevents a bad RCON password or transient RCON failure from being the only
+signal.
+
+`IDLE_ON_QUERY_FAILURE=0` means failed player-count checks do not count as idle.
+Set it to `1` only if you want a broken or unreachable local server to stop the
+instance after the startup grace period plus idle threshold.
 
 ## Updating The Server
 

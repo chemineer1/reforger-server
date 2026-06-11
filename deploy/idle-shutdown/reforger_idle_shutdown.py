@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Stop an EC2 host after the Reforger server has been idle long enough.
 
-The script queries the Steam A2S info endpoint exposed by Arma Reforger and
-tracks the reported player count. It is intentionally host-side: the game
-container keeps running the game, while systemd on the EC2 instance decides
-whether the instance should shut down.
+The script queries Reforger for player count and tracks confirmed idle time. It
+is intentionally host-side: the game container keeps running the game, while
+systemd on the EC2 instance decides whether the instance should shut down.
 """
 
 from __future__ import annotations
@@ -167,13 +166,68 @@ def query_rcon_player_count(
         return players, 0
 
 
+def player_count_sources(value: str) -> list[str]:
+    """Return an ordered list of player-count sources to try."""
+    sources = [
+        source.strip().lower()
+        for source in re.split(r"[,\s]+", value)
+        if source.strip()
+    ]
+    if sources == ["auto"]:
+        return ["rcon", "a2s"]
+    if not sources:
+        raise ValueError("PLAYER_COUNT_SOURCE cannot be empty")
+
+    supported = {"rcon", "a2s"}
+    unsupported = [source for source in sources if source not in supported]
+    if unsupported:
+        raise ValueError(f"unsupported PLAYER_COUNT_SOURCE={','.join(unsupported)!r}")
+    return sources
+
+
+def query_configured_player_count(
+    sources: list[str],
+    a2s_host: str,
+    a2s_port: int,
+    rcon_host: str,
+    rcon_port: int,
+    rcon_password: str,
+    timeout: float,
+    rcon_command: str,
+) -> tuple[int, int, str]:
+    errors: list[str] = []
+
+    for source in sources:
+        try:
+            if source == "rcon":
+                players, max_players = query_rcon_player_count(
+                    rcon_host,
+                    rcon_port,
+                    rcon_password,
+                    timeout,
+                    rcon_command,
+                )
+            elif source == "a2s":
+                players, max_players = query_player_count(a2s_host, a2s_port, timeout)
+            else:
+                raise ValueError(f"unsupported PLAYER_COUNT_SOURCE={source!r}")
+        except Exception as exc:  # noqa: BLE001 - try the next configured source
+            logging.warning("player count query via %s failed: %s", source, exc)
+            errors.append(f"{source}: {exc}")
+            continue
+
+        return players, max_players, source
+
+    raise RuntimeError(f"all player count sources failed ({'; '.join(errors)})")
+
+
 def main() -> int:
     logging.basicConfig(
         level=os.getenv("LOG_LEVEL", "INFO").upper(),
         format="%(asctime)s %(levelname)s %(message)s",
     )
 
-    source = os.getenv("PLAYER_COUNT_SOURCE", "a2s").strip().lower()
+    sources = player_count_sources(os.getenv("PLAYER_COUNT_SOURCE", "a2s"))
     a2s_host = os.getenv("A2S_HOST", "127.0.0.1")
     a2s_port = int(os.getenv("A2S_PORT", "17777"))
     rcon_host = os.getenv("RCON_HOST", "127.0.0.1")
@@ -193,7 +247,7 @@ def main() -> int:
 
     logging.info(
         "watching player count via %s; idle threshold=%ss; interval=%ss",
-        source,
+        ",".join(sources),
         idle_seconds,
         check_interval,
     )
@@ -203,23 +257,20 @@ def main() -> int:
         in_startup_grace = now - started_at < startup_grace_seconds
 
         try:
-            if source == "rcon":
-                players, max_players = query_rcon_player_count(
-                    rcon_host,
-                    rcon_port,
-                    rcon_password,
-                    timeout,
-                    rcon_command,
-                )
-            elif source == "a2s":
-                players, max_players = query_player_count(a2s_host, a2s_port, timeout)
-            else:
-                raise ValueError(f"unsupported PLAYER_COUNT_SOURCE={source!r}")
-
-            logging.info("player count: %s/%s", players, max_players)
+            players, max_players, source = query_configured_player_count(
+                sources,
+                a2s_host,
+                a2s_port,
+                rcon_host,
+                rcon_port,
+                rcon_password,
+                timeout,
+                rcon_command,
+            )
+            logging.info("player count via %s: %s/%s", source, players, max_players)
             is_idle = players == 0
         except Exception as exc:  # noqa: BLE001 - daemon should keep running
-            logging.warning("A2S query failed: %s", exc)
+            logging.warning("player count query failed: %s", exc)
             is_idle = idle_on_query_failure and not in_startup_grace
 
         if is_idle:
