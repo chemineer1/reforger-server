@@ -10,9 +10,9 @@ if [[ "${repo_dir}" != "${target_dir}" ]]; then
   exit 1
 fi
 
-sudo install -m 0644 deploy/systemd/reforger-server.service /etc/systemd/system/reforger-server.service
-sudo install -m 0644 deploy/systemd/reforger-idle-shutdown.service /etc/systemd/system/reforger-idle-shutdown.service
-sudo install -m 0755 deploy/idle-shutdown/reforger_idle_shutdown.py /opt/reforger-server/deploy/idle-shutdown/reforger_idle_shutdown.py
+sudo install -m 0644 "${repo_dir}/deploy/systemd/reforger-server.service" /etc/systemd/system/reforger-server.service
+sudo install -m 0644 "${repo_dir}/deploy/systemd/reforger-idle-shutdown.service" /etc/systemd/system/reforger-idle-shutdown.service
+sudo chmod 0755 "${repo_dir}/deploy/idle-shutdown/reforger_idle_shutdown.py"
 
 sudo systemctl daemon-reload
 sudo systemctl enable reforger-server.service
