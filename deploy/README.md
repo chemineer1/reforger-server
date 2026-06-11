@@ -99,7 +99,7 @@ When the server has finished downloading files and reached normal startup, stop
 it once so systemd owns the lifecycle from here on:
 
 ```sh
-docker compose down
+docker compose stop
 deploy/install-systemd.sh
 sudo systemctl start reforger-server.service reforger-idle-shutdown.service
 ```

@@ -83,7 +83,7 @@ default so EC2 boots are faster. To intentionally update the dedicated server,
 stop the service and run SteamCMD against the persisted volume:
 
 ```sh
-docker compose down
+docker compose stop
 docker compose run --rm --entrypoint /opt/steamcmd/steamcmd.sh reforger \
   +force_install_dir /home/steam/reforger \
   +login anonymous \
@@ -107,7 +107,7 @@ docker compose logs -f reforger
 Stop the server:
 
 ```sh
-docker compose down
+docker compose stop
 ```
 
 The dedicated server files and profile data are stored in named Docker volumes:
