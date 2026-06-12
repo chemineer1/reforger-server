@@ -21,8 +21,8 @@ services:
       # Set to "1" when you need SteamCMD to verify all server files.
       STEAM_VALIDATE: "0"
       SERVER_MAX_FPS: "60"
-      CONFIG_FILE: /home/steam/configs/server.json
-      FREEDOM_FIGHTERS_CONFIG_FILE: /home/steam/configs/FreedomFighters_ServerConfig.json
+      CONFIG_FILE: /run/configs/reforger-server.json
+      FREEDOM_FIGHTERS_CONFIG_FILE: /home/steam/profile/FreedomFighters_ServerConfig.json
     ports:
       # Game traffic, Steam A2S query, and optional RCON.
       - target: 2001
@@ -35,16 +35,24 @@ services:
         published: "19999"
         protocol: udp
     volumes:
-      # Keep downloaded server files and generated profile data outside the
-      # container lifecycle.
+      # Mutable runtime state. These survive container rebuilds/recreates.
       - reforger-server:/home/steam/reforger
       - reforger-profile:/home/steam/profile
-      # Server configuration lives in the repo and is mounted read-only.
-      - type: bind
-        source: ./config
-        target: /home/steam/configs
-        read_only: true
+    configs:
+      - source: reforger_server_config
+        target: /run/configs/reforger-server.json
+    secrets:
+      - source: freedom_fighters_server_config
+        target: /home/steam/profile/FreedomFighters_ServerConfig.json
 
 volumes:
   reforger-server:
   reforger-profile:
+
+configs:
+  reforger_server_config:
+    file: ./config/server.json
+
+secrets:
+  freedom_fighters_server_config:
+    file: ./config/FreedomFighters_ServerConfig.json
