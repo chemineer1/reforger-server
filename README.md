@@ -47,7 +47,10 @@ The optional Freedom Fighters mod config lives at:
 config/FreedomFighters_ServerConfig.json
 ```
 
-It is copied into the server profile volume as `FreedomFighters_ServerConfig.json` on startup, which is where the mod expects it.
+Compose mounts it as a read-only secret at
+`/home/steam/profile/FreedomFighters_ServerConfig.json`, which is where the mod
+expects it. Restart the server after changing this file so the mod reads the
+new webhook settings on its next launch.
 
 To enable Freedom Fighters status updates in Discord, create or edit that file
 from the tracked example:

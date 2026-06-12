@@ -16,8 +16,8 @@ ENV LANG=C.UTF-8 \
     STEAMCMD_DIR=/opt/steamcmd \
     SERVER_DIR=/home/steam/reforger \
     PROFILE_DIR=/home/steam/profile \
-    CONFIG_FILE=/home/steam/configs/server.json \
-    FREEDOM_FIGHTERS_CONFIG_FILE=/home/steam/configs/FreedomFighters_ServerConfig.json \
+    CONFIG_FILE=/run/configs/reforger-server.json \
+    FREEDOM_FIGHTERS_CONFIG_FILE=/home/steam/profile/FreedomFighters_ServerConfig.json \
     STEAM_APP_ID=1874900 \
     STEAM_BRANCH=public \
     STEAM_VALIDATE=0 \
@@ -43,7 +43,7 @@ RUN set -eux; \
     # for hosts that care about volume ownership.
     groupadd --gid "${GROUP_ID}" steam; \
     useradd --uid "${USER_ID}" --gid steam --create-home --shell /usr/sbin/nologin steam; \
-    install -d -o steam -g steam -m 0755 "${STEAMCMD_DIR}" "${SERVER_DIR}" "${PROFILE_DIR}" /home/steam/configs; \
+    install -d -o steam -g steam -m 0755 "${STEAMCMD_DIR}" "${SERVER_DIR}" "${PROFILE_DIR}"; \
     # Install SteamCMD itself at build time; game server files are downloaded
     # at container startup into the Compose-managed server volume.
     curl --fail --location --show-error --silent --retry 5 --retry-delay 2 "${STEAMCMD_URL}" \

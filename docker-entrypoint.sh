@@ -72,11 +72,15 @@ if [[ -f "${STEAMCMD_DIR}/linux64/steamclient.so" ]]; then
   ln -sf "${STEAMCMD_DIR}/linux64/steamclient.so" "${HOME}/.steam/sdk64/steamclient.so"
 fi
 
-# Freedom Fighters expects its optional mod-specific config in the server
-# profile directory. Keep the source file in ./config so it can be edited with
-# the main Reforger config, then copy it into the writable profile volume.
-if [[ -n "${FREEDOM_FIGHTERS_CONFIG_FILE:-}" && -f "${FREEDOM_FIGHTERS_CONFIG_FILE}" ]]; then
-  cp "${FREEDOM_FIGHTERS_CONFIG_FILE}" "${PROFILE_DIR}/FreedomFighters_ServerConfig.json"
+# Freedom Fighters reads this file directly from the profile directory. Compose
+# mounts the repo file there as a secret so the profile volume cannot hold a
+# stale webhook config.
+if [[ -n "${FREEDOM_FIGHTERS_CONFIG_FILE:-}" ]]; then
+  if [[ ! -f "${FREEDOM_FIGHTERS_CONFIG_FILE}" ]]; then
+    echo "Freedom Fighters config is missing: ${FREEDOM_FIGHTERS_CONFIG_FILE}" >&2
+    echo "Mount config/FreedomFighters_ServerConfig.json at that path or set FREEDOM_FIGHTERS_CONFIG_FILE empty." >&2
+    exit 78
+  fi
 fi
 
 # Fail before launch if SteamCMD did not produce the expected server binary.
@@ -95,7 +99,7 @@ launch_args=(
 )
 
 # CONFIG_FILE can be set empty for advanced manual launches, but the normal
-# Compose workflow expects ./config/server.json to be mounted read-only.
+# Compose workflow expects config/server.json to be mounted read-only.
 if [[ -n "${CONFIG_FILE}" ]]; then
   if [[ ! -f "${CONFIG_FILE}" ]]; then
     echo "Server config is missing: ${CONFIG_FILE}" >&2
