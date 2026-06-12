@@ -1,10 +1,15 @@
 {
-  "discord": {
-    "webhookUrl": "",
-    "includeIngameDate": true,
-    "useQuote": true,
-    "doorKeeper": true
-  },
-  "noBackend": false,
-  "devMode": false
+   "discord":{
+      "webhookUrl":"<url>",
+      "includeIngameDate":true,
+      "useQuote":true,
+      "doorKeeper":true
+   },
+   "noBackend":false,
+   "devMode":false,
+   "autoStart":{
+      "enabled":true,
+      "gameSetup":null,
+      "gameSettings":null
+   }
 }
