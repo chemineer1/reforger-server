@@ -1,7 +1,7 @@
 [Unit]
 Description=Stop EC2 when Arma Reforger has no players
-After=network-online.target reforger-server.service
-Requires=reforger-server.service
+After=network-online.target docker.service
+Requires=docker.service
 Wants=network-online.target
 
 [Service]

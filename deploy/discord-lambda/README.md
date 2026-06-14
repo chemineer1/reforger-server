@@ -101,6 +101,6 @@ ec2:StopInstances
 
 ## Notes
 
-The commands only control EC2 state. The EC2 host still uses systemd to start
-Docker Compose when it boots, and the idle shutdown service still stops the host
-after the configured zero-player window.
+The commands only control EC2 state. The EC2 host relies on Docker's restart
+policy to start the existing Compose container when Docker starts, and the idle
+shutdown service still stops the host after the configured zero-player window.

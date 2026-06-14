@@ -83,7 +83,7 @@ docker compose up -d --build
 The first start downloads the dedicated server into the
 `reforger-server_reforger-server` Docker volume. Later starts skip SteamCMD by
 default so EC2 boots are faster. To intentionally update the dedicated server,
-stop the service and run SteamCMD against the persisted volume:
+stop the container and run SteamCMD against the persisted volume:
 
 ```sh
 docker compose stop
@@ -95,11 +95,13 @@ docker compose run --rm --entrypoint /opt/steamcmd/steamcmd.sh reforger \
 docker compose up -d
 ```
 
-On an EC2 host installed with the systemd units, use the update procedure in
-`deploy/README.md` so the `reforger-server` and idle-shutdown services are
-stopped and restarted cleanly around the SteamCMD update.
+On an EC2 host, use the update procedure in `deploy/README.md` so the container
+and idle shutdown service are stopped and restarted cleanly around the SteamCMD
+update.
 
-The service retries failed starts up to five times. If the server stops after repeated failures, check the logs before starting it again.
+The Compose service uses Docker's `unless-stopped` restart policy. If the
+server keeps restarting after repeated failures, check the logs before starting
+it again.
 
 Follow logs:
 
@@ -122,7 +124,7 @@ reforger-server_reforger-profile
 
 ## AWS EC2
 
-AWS host setup, systemd units, and the 30-minute zero-player shutdown watcher live in:
+AWS host setup and the 30-minute zero-player shutdown watcher live in:
 
 ```text
 deploy
@@ -139,8 +141,8 @@ See `deploy/README.md` before installing on an EC2 instance.
 |-- docker-entrypoint.sh         # Container startup and SteamCMD/update logic
 |-- config/                      # Tracked example configs; local secrets are ignored
 `-- deploy/
-    |-- install-systemd.sh       # Installs the host services on EC2
-    |-- systemd/                 # Host service units
+    |-- install-systemd.sh       # Installs the idle shutdown service on EC2
+    |-- systemd/                 # Host service unit
     |-- idle-shutdown/           # Zero-player EC2 shutdown watcher
     `-- discord-lambda/          # Optional Discord slash-command Lambda
 ```

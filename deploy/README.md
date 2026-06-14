@@ -9,12 +9,12 @@ The expensive work should happen once:
 
 1. Build the Docker image during initial setup or planned maintenance.
 2. Download the Reforger dedicated server into the named Docker volume.
-3. Let normal EC2 starts run `docker compose up -d` without rebuilding.
+3. Create the container once with `docker compose up -d`.
 4. Let the entrypoint skip SteamCMD when the server executable already exists.
 
 With that flow, a Discord `/reforger start` only starts the EC2 instance,
-systemd starts the existing Compose service, and the container launches the
-persisted server files.
+Docker restarts the existing container, and the container launches the persisted
+server files.
 
 ## EC2 Settings
 
@@ -56,7 +56,7 @@ newgrp docker
 docker compose version
 ```
 
-Clone or copy this repository into the path expected by the systemd units:
+Clone or copy this repository into the path expected by the deployment scripts:
 
 ```sh
 sudo mkdir -p /opt/reforger-server
@@ -92,7 +92,7 @@ Compose mounts that file as a read-only secret at
 `/home/steam/profile/FreedomFighters_ServerConfig.json`, so restart the server
 after changing it.
 
-Build the image once and do the first server download before enabling systemd:
+Build the image once and do the first server download:
 
 ```sh
 docker compose build
@@ -100,18 +100,21 @@ docker compose up -d
 docker compose logs -f reforger
 ```
 
-When the server has finished downloading files and reached normal startup, stop
-it once so systemd owns the lifecycle from here on:
+When the server has finished downloading files and reached normal startup,
+install and start the idle shutdown service:
 
 ```sh
-docker compose stop
 deploy/install-systemd.sh
-sudo systemctl start reforger-server.service reforger-idle-shutdown.service
+docker compose up -d
+sudo systemctl start reforger-idle-shutdown.service
 ```
+
+Leave the Compose container created. The `restart: unless-stopped` policy in
+`compose.yaml` lets Docker restart it automatically when the EC2 host boots.
 
 ## Host Layout
 
-The included systemd units expect the repository at:
+The included deployment scripts expect the repository at:
 
 ```text
 /opt/reforger-server
@@ -121,25 +124,25 @@ The AWS deployment files are grouped by responsibility:
 
 ```text
 deploy/
-|-- install-systemd.sh       # Copies and enables host services
-|-- systemd/                 # systemd unit files installed into /etc/systemd/system
+|-- install-systemd.sh       # Copies and enables the idle shutdown service
+|-- systemd/                 # systemd unit file installed into /etc/systemd/system
 |-- idle-shutdown/           # Python watcher that shuts down an idle EC2 host
 `-- discord-lambda/          # Optional Discord slash-command Lambda
 ```
 
-## Install Services
+## Install Service
 
 From `/opt/reforger-server`:
 
 ```sh
 deploy/install-systemd.sh
-sudo systemctl start reforger-server.service reforger-idle-shutdown.service
+docker compose up -d
+sudo systemctl start reforger-idle-shutdown.service
 ```
 
 Check status:
 
 ```sh
-sudo systemctl status reforger-server.service
 sudo systemctl status reforger-idle-shutdown.service
 docker compose ps
 ```
@@ -189,13 +192,15 @@ server executable already exists. To update the server during planned
 maintenance:
 
 ```sh
-sudo systemctl stop reforger-server.service reforger-idle-shutdown.service
+sudo systemctl stop reforger-idle-shutdown.service
+docker compose stop
 docker compose run --rm --entrypoint /opt/steamcmd/steamcmd.sh reforger \
   +force_install_dir /home/steam/reforger \
   +login anonymous \
   +app_update 1874900 \
   +quit
-sudo systemctl start reforger-server.service reforger-idle-shutdown.service
+docker compose up -d
+sudo systemctl start reforger-idle-shutdown.service
 ```
 
 If you suspect corrupted files, add `validate` before `+quit`.
