@@ -16,7 +16,7 @@
     "whitelist": []
   },
   "game": {
-    "name": "Freedom Fighters Docker Server",
+    "name": "change-me",
     "password": "",
     "passwordAdmin": "change-me",
     "admins": [],
@@ -29,15 +29,15 @@
       "networkViewDistance": 1500,
       "disableThirdPerson": false,
       "fastValidation": true,
-      "battlEye": true,
+      "battlEye": false,
       "VONDisableUI": false,
       "VONDisableDirectSpeechUI": false,
       "VONCanTransmitCrossFaction": true
     },
     "mods": [
       {
-        "modId": "CAFEBEEFF0CACC1A",
-        "name": "FreedomFighters"
+        "modId": "CAFEBABEF0CACC1A",
+        "name": "FreedomFightersPlus"
       }
     ]
   },
