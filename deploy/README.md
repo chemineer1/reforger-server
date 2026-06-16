@@ -88,7 +88,7 @@ RCON_PASSWORD=your-rcon-password
 ```
 
 Edit `config/FreedomFighters_ServerConfig.json` with your Discord webhook URL.
-Compose mounts that file as a read-only secret at
+Compose mounts that file as a read-only secret and copies it into
 `/home/steam/profile/FreedomFighters_ServerConfig.json`, so restart the server
 after changing it.
 

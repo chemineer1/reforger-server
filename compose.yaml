@@ -21,6 +21,7 @@ services:
       STEAM_VALIDATE: "0"
       SERVER_MAX_FPS: "60"
       CONFIG_FILE: /run/configs/reforger-server.json
+      FREEDOM_FIGHTERS_CONFIG_SOURCE: /run/secrets/freedom_fighters_server_config
       FREEDOM_FIGHTERS_CONFIG_FILE: /home/steam/profile/FreedomFighters_ServerConfig.json
     ports:
       # Game traffic, Steam A2S query, and optional RCON.
@@ -42,7 +43,7 @@ services:
         target: /run/configs/reforger-server.json
     secrets:
       - source: freedom_fighters_server_config
-        target: /home/steam/profile/FreedomFighters_ServerConfig.json
+        target: freedom_fighters_server_config
 
 volumes:
   reforger-server:
