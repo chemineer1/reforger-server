@@ -44,7 +44,7 @@ RUN set -eux; \
     # for hosts that care about volume ownership.
     groupadd --gid "${GROUP_ID}" steam; \
     useradd --uid "${USER_ID}" --gid steam --create-home --shell /usr/sbin/nologin steam; \
-    install -d -o steam -g steam -m 0755 "${STEAMCMD_DIR}" "${SERVER_DIR}" "${PROFILE_DIR}"; \
+    install -d -o steam -g steam -m 0755 "${STEAMCMD_DIR}" "${SERVER_DIR}" "${PROFILE_DIR}" "${PROFILE_DIR}/profile"; \
     # Install SteamCMD itself at build time; game server files are downloaded
     # at container startup into the Compose-managed server volume.
     curl --fail --location --show-error --silent --retry 5 --retry-delay 2 "${STEAMCMD_URL}" \

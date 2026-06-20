@@ -104,7 +104,7 @@ launch_args=(
 )
 
 # CONFIG_FILE can be set empty for advanced manual launches, but the normal
-# Compose workflow expects config/server.json to be mounted read-only.
+# Compose workflow expects config/config.json to be mounted read-only.
 if [[ -n "${CONFIG_FILE}" ]]; then
   if [[ ! -f "${CONFIG_FILE}" ]]; then
     echo "Server config is missing: ${CONFIG_FILE}" >&2

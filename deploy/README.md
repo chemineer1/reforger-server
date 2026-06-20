@@ -68,12 +68,12 @@ cd /opt/reforger-server
 Create local config files:
 
 ```sh
-cp config/server.example.json config/server.json
+cp config/config.example.json config/config.json
 cp config/FreedomFighters_ServerConfig.example.json config/FreedomFighters_ServerConfig.json
 cp config/ec2-idle.env.example config/ec2-idle.env
 ```
 
-Edit `config/server.json` and change at least:
+Edit `config/config.json` and change at least:
 
 ```text
 game.passwordAdmin

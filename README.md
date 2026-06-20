@@ -7,13 +7,13 @@ This project is managed with the modern Docker Compose plugin.
 The local server config lives at:
 
 ```text
-config/server.json
+config/config.json
 ```
 
 It is ignored by git because it can contain server passwords and admin IDs. A starter config is already present; reset it from the tracked example whenever needed:
 
 ```sh
-cp config/server.example.json config/server.json
+cp config/config.example.json config/config.json
 ```
 
 Before opening the server publicly, change at least:

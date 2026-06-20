@@ -51,7 +51,7 @@ volumes:
 
 configs:
   reforger_server_config:
-    file: ./config/server.json
+    file: ./config/config.json
 
 secrets:
   freedom_fighters_server_config:
