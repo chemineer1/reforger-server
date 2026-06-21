@@ -1,0 +1,12 @@
+services:
+  reforger:
+    environment:
+      PROFILE_CONFIG_SOURCE: /run/secrets/freedom_fighters_server_config
+      PROFILE_CONFIG_FILE: /home/steam/profile/FreedomFighters_ServerConfig.json
+    secrets:
+      - source: freedom_fighters_server_config
+        target: freedom_fighters_server_config
+
+secrets:
+  freedom_fighters_server_config:
+    file: ./config/FreedomFighters_ServerConfig.json

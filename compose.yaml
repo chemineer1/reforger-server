@@ -15,14 +15,12 @@ services:
       # Stable Arma Reforger dedicated server app ID.
       STEAM_APP_ID: "1874900"
       STEAM_BRANCH: public
-      # 'missing' to update the server only if the files are missing. 'always' to update every time the container starts.
-      STEAM_UPDATE_ON_START: always
+      # 'missing' installs only when the server files are absent. Use 'always' when intentionally updating.
+      STEAM_UPDATE_ON_START: missing
       # Set to "1" when you need SteamCMD to verify all server files.
       STEAM_VALIDATE: "0"
       SERVER_MAX_FPS: "60"
       CONFIG_FILE: /run/configs/reforger-server.json
-      FREEDOM_FIGHTERS_CONFIG_SOURCE: /run/secrets/freedom_fighters_server_config
-      FREEDOM_FIGHTERS_CONFIG_FILE: /home/steam/profile/FreedomFighters_ServerConfig.json
     ports:
       # Game traffic, Steam A2S query, and optional RCON.
       - target: 2001
@@ -41,9 +39,6 @@ services:
     configs:
       - source: reforger_server_config
         target: /run/configs/reforger-server.json
-    secrets:
-      - source: freedom_fighters_server_config
-        target: freedom_fighters_server_config
 
 volumes:
   reforger-server:
@@ -52,7 +47,3 @@ volumes:
 configs:
   reforger_server_config:
     file: ./config/config.json
-
-secrets:
-  freedom_fighters_server_config:
-    file: ./config/FreedomFighters_ServerConfig.json

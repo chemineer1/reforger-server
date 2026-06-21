@@ -72,19 +72,18 @@ if [[ -f "${STEAMCMD_DIR}/linux64/steamclient.so" ]]; then
   ln -sf "${STEAMCMD_DIR}/linux64/steamclient.so" "${HOME}/.steam/sdk64/steamclient.so"
 fi
 
-# Freedom Fighters reads this file from the runtime profile directory created
-# under the server's -profile root. Copy the Compose secret there on each start
-# so the profile volume cannot hold a stale webhook config.
-if [[ -n "${FREEDOM_FIGHTERS_CONFIG_FILE:-}" ]]; then
-  freedom_fighters_config_source="${FREEDOM_FIGHTERS_CONFIG_SOURCE:-${FREEDOM_FIGHTERS_CONFIG_FILE}}"
-  if [[ ! -f "${freedom_fighters_config_source}" ]]; then
-    echo "Freedom Fighters config is missing: ${freedom_fighters_config_source}" >&2
-    echo "Mount config/FreedomFighters_ServerConfig.json as a secret or set FREEDOM_FIGHTERS_CONFIG_FILE empty." >&2
+# Some scenarios/mods need one extra config file copied into the runtime profile
+# directory. Keep this generic so Compose can opt in per scenario.
+if [[ -n "${PROFILE_CONFIG_FILE:-}" ]]; then
+  profile_config_source="${PROFILE_CONFIG_SOURCE:-${PROFILE_CONFIG_FILE}}"
+  if [[ ! -f "${profile_config_source}" ]]; then
+    echo "Profile config is missing: ${profile_config_source}" >&2
+    echo "Mount the config file at that path or leave PROFILE_CONFIG_FILE empty." >&2
     exit 78
   fi
-  mkdir -p "${FREEDOM_FIGHTERS_CONFIG_FILE%/*}"
-  if [[ "${freedom_fighters_config_source}" != "${FREEDOM_FIGHTERS_CONFIG_FILE}" ]]; then
-    install -m 0600 "${freedom_fighters_config_source}" "${FREEDOM_FIGHTERS_CONFIG_FILE}"
+  mkdir -p "${PROFILE_CONFIG_FILE%/*}"
+  if [[ "${profile_config_source}" != "${PROFILE_CONFIG_FILE}" ]]; then
+    install -m 0600 "${profile_config_source}" "${PROFILE_CONFIG_FILE}"
   fi
 fi
 

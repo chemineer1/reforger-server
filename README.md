@@ -10,10 +10,18 @@ The local server config lives at:
 config/config.json
 ```
 
-It is ignored by git because it can contain server passwords and admin IDs. A starter config is already present; reset it from the tracked example whenever needed:
+It is ignored by git because it can contain server passwords and admin IDs. Pick a tracked scenario example and copy it into place whenever you want to switch modes.
+
+For regular Game Master:
 
 ```sh
-cp config/config.example.json config/config.json
+cp config/config.SandboxExample.json config/config.json
+```
+
+For Freedom Fighters:
+
+```sh
+cp config/config.FfExample.json config/config.json
 ```
 
 Before opening the server publicly, change at least:
@@ -29,50 +37,47 @@ Keep `bindAddress` and `publicAddress` empty unless you have a specific reason t
 
 RCON is enabled on `19999/udp`, matching the Compose port mapping. Change `rcon.password` before exposing the server.
 
-This repo is set up for Freedom Fighters by default. The Reforger config uses the Freedom Fighters Workshop mod:
+## Scenario Profiles
+
+The base Compose service is scenario-agnostic. It mounts only `config/config.json`
+as the Reforger server config and does not assume a specific mission or mod.
+
+The Game Master example uses the Everon Game Master scenario:
 
 ```text
-CAFEBEEFF0CACC1A
+{59AD59368755F41A}Missions/21_GM_Eden.conf
 ```
 
-and the Everon Freedom Fighters scenario:
+The Freedom Fighters profile uses the Everon Freedom Fighters scenario and
+Workshop mod:
 
 ```text
 {64B2F8D8059EE270}Missions/FreedomFighters/Everon.conf
+CAFEBEEFF0CACC1A
 ```
 
-The optional Freedom Fighters mod config lives at:
+Freedom Fighters also has an optional mod config:
 
 ```text
 config/FreedomFighters_ServerConfig.json
 ```
 
-Compose mounts it as a read-only secret and copies it into
-`/home/steam/profile/FreedomFighters_ServerConfig.json`, which is where the
-running server reads the mod config. Restart the server after changing this file
-so the mod reads the new webhook settings on its next launch.
-
-To enable Freedom Fighters status updates in Discord, create or edit that file
-from the tracked example:
+Create it from the tracked example when you need Discord/webhook settings:
 
 ```sh
 cp config/FreedomFighters_ServerConfig.example.json config/FreedomFighters_ServerConfig.json
 ```
 
-Then set `discord.webhookUrl` to a Discord webhook URL:
+Run Compose with the Freedom Fighters override so that file is mounted as a
+secret and copied into `/home/steam/profile/FreedomFighters_ServerConfig.json`:
 
-```json
-{
-  "discord": {
-    "webhookUrl": "https://discord.com/api/webhooks/..."
-  }
-}
+```sh
+docker compose -f compose.yaml -f compose.freedom-fighters.yaml up -d --build
 ```
 
-Get the webhook URL from Discord by opening the target channel's settings, then
-**Integrations** -> **Webhooks** -> **New Webhook** or an existing webhook ->
-**Copy Webhook URL**. Keep this URL private; anyone with it can post to that
-channel.
+For other scenarios that need an extra profile file, add a small Compose
+override that sets `PROFILE_CONFIG_SOURCE` and `PROFILE_CONFIG_FILE`. The
+entrypoint will copy the mounted source into the runtime profile before launch.
 
 Build and start the server:
 
@@ -137,6 +142,7 @@ See `deploy/README.md` before installing on an EC2 instance.
 ```text
 .
 |-- compose.yaml                 # Local and EC2 Docker Compose service
+|-- compose.freedom-fighters.yaml # Optional Freedom Fighters profile override
 |-- Dockerfile                   # Dedicated server container image
 |-- docker-entrypoint.sh         # Container startup and SteamCMD/update logic
 |-- config/                      # Tracked example configs; local secrets are ignored
