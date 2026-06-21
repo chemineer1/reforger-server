@@ -1,0 +1,166 @@
+{
+  "publicPort": 2001,
+  "a2s": {
+    "address": "0.0.0.0",
+    "port": 17777
+  },
+  "game": {
+    "name": "CHANGE-ME",
+    "password": "CHANGE-ME",
+    "passwordAdmin": "CHANGE-ME",
+    "admins": [],
+    "scenarioId": "{59AD59368755F41A}Missions/21_GM_Eden.conf",
+    "maxPlayers": 8,
+    "visible": true,
+    "gameProperties": {
+      "serverMaxViewDistance": 5000,
+      "serverMinGrassDistance": 100,
+      "fastValidation": true,
+      "networkViewDistance": 1500,
+      "battlEye": false,
+      "VONCanTransmitCrossFaction": true,
+      "missionHeader": {
+        "m_ACE_Settings": {
+          "m_ACE_Finger_Settings": {
+            "m_fMaxPointingDistanceM": 3000.0,
+            "m_bCanPingAttach": 1,
+            "m_fPingRangeM": -1.0,
+            "m_fMapPointingRangeM": -1.0
+          }
+        }
+      }
+    },
+    "mods": [
+      {
+      "modId": "65FB51CDA61F1071",
+      "name": "ToH ReCharacters Greek",
+      "version": "1.2.0"
+      },
+      {
+      "modId": "65FB4A6CFFC4079C",
+      "name": "ToH ReCharacters European",
+      "version": "1.2.0"
+      },
+      {
+      "modId": "6146FAED5AAD7C55",
+      "name": "WCS_Helicopters",
+      "version": "7.0.1"
+      },
+      {
+      "modId": "615CC2D870A39838",
+      "name": "WCS_Arsenal",
+      "version": "7.0.8"
+      },
+      {
+      "modId": "68B2E735099BA541",
+      "name": "AI Using Stingers",
+      "version": "1.0.20"
+      },
+      {
+      "modId": "60C53A9372ED3964",
+      "name": "ACE Compass",
+      "version": "1.4.3"
+      },
+      {
+      "modId": "5DBD560C5148E1DA",
+      "name": "ACE Carrying",
+      "version": "1.4.3"
+      },
+      {
+      "modId": "5EB744C5F42E0800",
+      "name": "ACE Chopping",
+      "version": "1.4.3"
+      },
+      {
+      "modId": "5E389BB9F58B79A6",
+      "name": "SpaceCore",
+      "version": "7.0.0"
+      },
+      {
+      "modId": "595F2BF2F44836FB",
+      "name": "RHS - Status Quo",
+      "version": "0.15.5025"
+      },
+      {
+      "modId": "5F268647F8A1A1F4",
+      "name": "CRX Enfusion A.I.",
+      "version": "1.3.72"
+      },
+      {
+      "modId": "6174A376E06661BF",
+      "name": "Brutal Voices",
+      "version": "1.0.1"
+      },
+      {
+      "modId": "6088A3044B7ECBFD",
+      "name": "Keep Gun When Uncon",
+      "version": "1.0.1"
+      },
+      {
+      "modId": "611CB1D409001EB0",
+      "name": "ACE Magazine Repack",
+      "version": "1.4.3"
+      },
+      {
+      "modId": "631CD0023FD58D35",
+      "name": "Realism Overhaul - AI",
+      "version": "1.6.2"
+      },
+      {
+      "modId": "60E573C9B04CC408",
+      "name": "ACE Backblast",
+      "version": "1.4.3"
+      },
+      {
+      "modId": "61E42AE6714A3CC2",
+      "name": "WCS_Armbands",
+      "version": "7.0.1"
+      },
+      {
+      "modId": "5ED0FAC84A48D018",
+      "name": "DarcMissions",
+      "version": "1.0.105"
+      },
+      {
+      "modId": "64475DC102F2BDA4",
+      "name": "ACE Radio",
+      "version": "1.4.3"
+      },
+      {
+      "modId": "615A80027C5C9170",
+      "name": "WCS_Vehicles",
+      "version": "7.0.5"
+      },
+      {
+      "modId": "685EDA5A6ACD53C5",
+      "name": "WCS_Suppression",
+      "version": "7.0.1"
+      },
+      {
+      "modId": "65FB5265B4F72F4B",
+      "name": "ToH ReCharacters Russian",
+      "version": "1.2.0"
+      },
+      {
+      "modId": "606C369BAC3F6CC3",
+      "name": "ACE Finger",
+      "version": "1.4.3"
+      },
+      {
+      "modId": "689EDED542F881AF",
+      "name": "DarcChopper",
+      "version": "1.0.20"
+      },
+      {
+      "modId": "66C3548C8143586B",
+      "name": "Disable Film Grain",
+      "version": "1.0.1"
+      }
+    ]
+  },
+  "operating": {
+    "lobbyPlayerSynchronise": true,
+    "disableNavmeshStreaming": [],
+    "disableServerShutdown": true
+  }
+}
