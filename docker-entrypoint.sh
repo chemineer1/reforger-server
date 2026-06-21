@@ -94,7 +94,7 @@ if [[ ! -x "${server_executable}" ]]; then
 fi
 
 # These are container defaults. Extra server arguments can still be appended
-# after `docker compose run reforger ...` or by overriding the Compose command.
+# after `docker compose run server ...` or by overriding the Compose command.
 launch_args=(
   -profile "${PROFILE_DIR}"
   -backendlog

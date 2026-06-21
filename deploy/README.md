@@ -97,7 +97,7 @@ Build the image once and do the first server download:
 ```sh
 docker compose build
 docker compose up -d
-docker compose logs -f reforger
+docker compose logs -f server
 ```
 
 When the server has finished downloading files and reached normal startup,
@@ -150,7 +150,7 @@ docker compose ps
 Follow logs:
 
 ```sh
-docker compose logs -f reforger
+docker compose logs -f server
 journalctl -u reforger-idle-shutdown.service -f
 ```
 
@@ -194,7 +194,7 @@ maintenance:
 ```sh
 sudo systemctl stop reforger-idle-shutdown.service
 docker compose stop
-docker compose run --rm --entrypoint /opt/steamcmd/steamcmd.sh reforger \
+docker compose run --rm --entrypoint /opt/steamcmd/steamcmd.sh server \
   +force_install_dir /home/steam/reforger \
   +login anonymous \
   +app_update 1874900 \

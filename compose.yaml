@@ -1,7 +1,7 @@
-name: reforger-server
+name: reforger
 
 services:
-  reforger:
+  server:
     build:
       context: .
       dockerfile: Dockerfile
@@ -34,15 +34,15 @@ services:
         protocol: udp
     volumes:
       # Mutable runtime state. These survive container rebuilds/recreates.
-      - reforger-server:/home/steam/reforger
-      - reforger-profile:/home/steam/profile
+      - server-files:/home/steam/reforger
+      - profile:/home/steam/profile
     configs:
       - source: reforger_server_config
         target: /run/configs/reforger-server.json
 
 volumes:
-  reforger-server:
-  reforger-profile:
+  server-files:
+  profile:
 
 configs:
   reforger_server_config:

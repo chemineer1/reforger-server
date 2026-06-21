@@ -86,13 +86,13 @@ docker compose up -d --build
 ```
 
 The first start downloads the dedicated server into the
-`reforger-server_reforger-server` Docker volume. Later starts skip SteamCMD by
+`reforger_server-files` Docker volume. Later starts skip SteamCMD by
 default so EC2 boots are faster. To intentionally update the dedicated server,
 stop the container and run SteamCMD against the persisted volume:
 
 ```sh
 docker compose stop
-docker compose run --rm --entrypoint /opt/steamcmd/steamcmd.sh reforger \
+docker compose run --rm --entrypoint /opt/steamcmd/steamcmd.sh server \
   +force_install_dir /home/steam/reforger \
   +login anonymous \
   +app_update 1874900 \
@@ -111,7 +111,7 @@ it again.
 Follow logs:
 
 ```sh
-docker compose logs -f reforger
+docker compose logs -f server
 ```
 
 Stop the server:
@@ -123,8 +123,8 @@ docker compose stop
 The dedicated server files and profile data are stored in named Docker volumes:
 
 ```text
-reforger-server_reforger-server
-reforger-server_reforger-profile
+reforger_server-files
+reforger_profile
 ```
 
 ## AWS EC2
