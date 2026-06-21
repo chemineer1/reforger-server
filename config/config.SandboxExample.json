@@ -52,14 +52,34 @@
       "version": "7.0.8"
       },
       {
+      "modId": "629B2BA37EFFD577",
+      "name": "WCS_Armaments",
+      "version": "7.0.1"
+      },
+      {
       "modId": "68B2E735099BA541",
       "name": "AI Using Stingers",
       "version": "1.0.20"
       },
       {
+      "modId": "6602C1EC7E5A4A87",
+      "name": "WCS_Clothing_Assets",
+      "version": "7.0.0"
+      },
+      {
+      "modId": "631C3C1AEE9C90BC",
+      "name": "WCS_Sounds",
+      "version": "7.0.0"
+      },
+      {
       "modId": "60C53A9372ED3964",
       "name": "ACE Compass",
       "version": "1.4.3"
+      },
+      {
+      "modId": "61C74A8B647617DA",
+      "name": "WCS_Attachments",
+      "version": "7.0.0"
       },
       {
       "modId": "5DBD560C5148E1DA",
@@ -72,14 +92,29 @@
       "version": "1.4.3"
       },
       {
+      "modId": "61D57616CAFBB23D",
+      "name": "WCS_LoadoutEditor",
+      "version": "7.0.1"
+      },
+      {
       "modId": "5E389BB9F58B79A6",
       "name": "SpaceCore",
       "version": "7.0.0"
       },
       {
+      "modId": "65CF7AE8574E06D2",
+      "name": "WCS_Weapons",
+      "version": "7.0.1"
+      },
+      {
       "modId": "595F2BF2F44836FB",
       "name": "RHS - Status Quo",
       "version": "0.15.5025"
+      },
+      {
+      "modId": "64610AFB74AA9842",
+      "name": "WCS_Core",
+      "version": "7.0.11"
       },
       {
       "modId": "5F268647F8A1A1F4",
@@ -107,6 +142,11 @@
       "version": "1.6.2"
       },
       {
+      "modId": "62A668F513428630",
+      "name": "WCS_Scopes",
+      "version": "7.0.2"
+      },
+      {
       "modId": "60E573C9B04CC408",
       "name": "ACE Backblast",
       "version": "1.4.3"
@@ -117,14 +157,34 @@
       "version": "7.0.1"
       },
       {
+      "modId": "65F929DF622BAD50",
+      "name": "WCS_RHS_Weapons",
+      "version": "7.0.4"
+      },
+      {
       "modId": "5ED0FAC84A48D018",
       "name": "DarcMissions",
       "version": "1.0.105"
       },
       {
+      "modId": "615818DA7C0343FD",
+      "name": "WCS_RU",
+      "version": "7.0.0"
+      },
+      {
       "modId": "64475DC102F2BDA4",
       "name": "ACE Radio",
       "version": "1.4.3"
+      },
+      {
+      "modId": "615806DC6C57AF02",
+      "name": "WCS_NATO",
+      "version": "7.0.0"
+      },
+      {
+      "modId": "68F006D910E7546F",
+      "name": "WCS_Weapon_Scripts",
+      "version": "7.0.1"
       },
       {
       "modId": "615A80027C5C9170",
@@ -142,14 +202,29 @@
       "version": "1.2.0"
       },
       {
+      "modId": "BADC0DEDABBEDA5E",
+      "name": "RHS - Content Pack 02",
+      "version": "0.15.5025"
+      },
+      {
       "modId": "606C369BAC3F6CC3",
       "name": "ACE Finger",
       "version": "1.4.3"
       },
       {
+      "modId": "6152CB0BD0684837",
+      "name": "WCS_Clothing",
+      "version": "7.0.2"
+      },
+      {
       "modId": "689EDED542F881AF",
       "name": "DarcChopper",
       "version": "1.0.20"
+      },
+      {
+      "modId": "1337C0DE5DABBEEF",
+      "name": "RHS - Content Pack 01",
+      "version": "0.15.5025"
       },
       {
       "modId": "66C3548C8143586B",
