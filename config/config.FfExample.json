@@ -37,19 +37,14 @@
       "version": "1.2.0"
       },
       {
-      "modId": "65FB4A6CFFC4079C",
-      "name": "ToH ReCharacters European",
-      "version": "1.2.0"
+      "modId": "629B2BA37EFFD577",
+      "name": "WCS_Armaments",
+      "version": "7.0.1"
       },
       {
       "modId": "5D1880C4AD410C14",
       "name": "M1 Abrams",
-      "version": "7.0.4"
-      },
-      {
-      "modId": "68B2E735099BA541",
-      "name": "AI Using Stingers",
-      "version": "1.0.20"
+      "version": "7.0.5"
       },
       {
       "modId": "631EE12D448D7FCC",
@@ -60,6 +55,21 @@
       "modId": "60C53A9372ED3964",
       "name": "ACE Compass",
       "version": "1.4.3"
+      },
+      {
+      "modId": "612F512CD4CB21D5",
+      "name": "WCS_Earplugs",
+      "version": "7.0.0"
+      },
+      {
+      "modId": "61C74A8B647617DA",
+      "name": "WCS_Attachments",
+      "version": "7.0.0"
+      },
+      {
+      "modId": "64F57AB37D531246",
+      "name": "WCS_TankMarkers",
+      "version": "6.0.2"
       },
       {
       "modId": "5DBD560C5148E1DA",
@@ -77,6 +87,191 @@
       "version": "0.69.1"
       },
       {
+      "modId": "6698F8DD1B444BEB",
+      "name": "DarcMissionsCompatFF",
+      "version": "1.0.21"
+      },
+      {
+      "modId": "5E389BB9F58B79A6",
+      "name": "SpaceCore",
+      "version": "7.0.0"
+      },
+      {
+      "modId": "6870CCE78B5D7070",
+      "name": "FF - No vehicle obstruction",
+      "version": "1.2.0"
+      },
+      {
+      "modId": "60C4CE4888FF4621",
+      "name": "ACE Core",
+      "version": "1.4.4"
+      },
+      {
+      "modId": "6875030CAD04AE0A",
+      "name": "FF - Trash Can",
+      "version": "0.1.9"
+      },
+      {
+      "modId": "64610AFB74AA9842",
+      "name": "WCS_Core",
+      "version": "7.0.11"
+      },
+      {
+      "modId": "5F268647F8A1A1F4",
+      "name": "CRX Enfusion A.I.",
+      "version": "1.3.72"
+      },
+      {
+      "modId": "611CB1D409001EB0",
+      "name": "ACE Magazine Repack",
+      "version": "1.4.3"
+      },
+      {
+      "modId": "6528C95796EBEDE0",
+      "name": "Environmental Ambience Mod",
+      "version": "1.0.12"
+      },
+      {
+      "modId": "5C721177A220B42F",
+      "name": "Joint Light Tactical Vehicle",
+      "version": "7.0.1"
+      },
+      {
+      "modId": "64CB39E57377C861",
+      "name": "WCS_AH-1S",
+      "version": "7.0.0"
+      },
+      {
+      "modId": "64475DC102F2BDA4",
+      "name": "ACE Radio",
+      "version": "1.4.3"
+      },
+      {
+      "modId": "615806DC6C57AF02",
+      "name": "WCS_NATO",
+      "version": "7.0.0"
+      },
+      {
+      "modId": "662EB83AB3F8CAE3",
+      "name": "AKI_Core_Upgrade",
+      "version": "7.0.0"
+      },
+      {
+      "modId": "615A80027C5C9170",
+      "name": "WCS_Vehicles",
+      "version": "7.0.5"
+      },
+      {
+      "modId": "64ED6553B8AF6B62",
+      "name": "Atmospheric Weather Mod",
+      "version": "1.0.37"
+      },
+      {
+      "modId": "65FB5265B4F72F4B",
+      "name": "ToH ReCharacters Russian",
+      "version": "1.2.0"
+      },
+      {
+      "modId": "BADC0DEDABBEDA5E",
+      "name": "RHS - Content Pack 02",
+      "version": "0.15.5025"
+      },
+      {
+      "modId": "62AE96D92179F7A0",
+      "name": "WCS_AH-6M_Upgrade",
+      "version": "7.0.0"
+      },
+      {
+      "modId": "606C369BAC3F6CC3",
+      "name": "ACE Finger",
+      "version": "1.4.3"
+      },
+      {
+      "modId": "689EDED542F881AF",
+      "name": "DarcChopper",
+      "version": "1.0.20"
+      },
+      {
+      "modId": "6273146ADFE8241D",
+      "name": "WCS_AH-6M",
+      "version": "7.0.0"
+      },
+      {
+      "modId": "1337C0DE5DABBEEF",
+      "name": "RHS - Content Pack 01",
+      "version": "0.15.5025"
+      },
+      {
+      "modId": "66C3548C8143586B",
+      "name": "Disable Film Grain",
+      "version": "1.0.1"
+      },
+      {
+      "modId": "5AAAC70D754245DD",
+      "name": "Server Admin Tools",
+      "version": "1.7.0"
+      },
+      {
+      "modId": "6508EDDEF93B2B29",
+      "name": "WCS_KA-52_Upgrade",
+      "version": "7.0.0"
+      },
+      {
+      "modId": "65FB4A6CFFC4079C",
+      "name": "ToH ReCharacters European",
+      "version": "1.2.0"
+      },
+      {
+      "modId": "6146FAED5AAD7C55",
+      "name": "WCS_Helicopters",
+      "version": "7.0.1"
+      },
+      {
+      "modId": "66F87A85382A0B17",
+      "name": "RHS EPF persistence",
+      "version": "1.0.16"
+      },
+      {
+      "modId": "628933A0D3A0D700",
+      "name": "WCS_Mi-24V",
+      "version": "7.0.1"
+      },
+      {
+      "modId": "615CC2D870A39838",
+      "name": "WCS_Arsenal",
+      "version": "7.0.8"
+      },
+      {
+      "modId": "62CCD69DD17E4F2F",
+      "name": "AKI_Core",
+      "version": "7.0.0"
+      },
+      {
+      "modId": "68B2E735099BA541",
+      "name": "AI Using Stingers",
+      "version": "1.0.20"
+      },
+      {
+      "modId": "6602C1EC7E5A4A87",
+      "name": "WCS_Clothing_Assets",
+      "version": "7.0.0"
+      },
+      {
+      "modId": "631C3C1AEE9C90BC",
+      "name": "WCS_Sounds",
+      "version": "7.0.0"
+      },
+      {
+      "modId": "5E92F5A4A1B75A75",
+      "name": "Player Map Markers",
+      "version": "1.3.2"
+      },
+      {
+      "modId": "61D57616CAFBB23D",
+      "name": "WCS_LoadoutEditor",
+      "version": "7.0.1"
+      },
+      {
       "modId": "6303360DA719E832",
       "name": "WCS_AH-64D",
       "version": "7.0.0"
@@ -87,14 +282,14 @@
       "version": "0.6.10"
       },
       {
-      "modId": "6698F8DD1B444BEB",
-      "name": "DarcMissionsCompatFF",
-      "version": "1.0.21"
+      "modId": "64CB35D07BAEE60F",
+      "name": "WCS_KA-52",
+      "version": "7.0.0"
       },
       {
-      "modId": "6870CCE78B5D7070",
-      "name": "FF - No vehicle obstruction",
-      "version": "1.2.0"
+      "modId": "65CF7AE8574E06D2",
+      "name": "WCS_Weapons",
+      "version": "7.0.1"
       },
       {
       "modId": "692121914CDE6746",
@@ -112,14 +307,9 @@
       "version": "1.0.3"
       },
       {
-      "modId": "6875030CAD04AE0A",
-      "name": "FF - Trash Can",
-      "version": "0.1.9"
-      },
-      {
-      "modId": "5F268647F8A1A1F4",
-      "name": "CRX Enfusion A.I.",
-      "version": "1.3.72"
+      "modId": "6503091A7B264FC3",
+      "name": "WCS_Motorbikes",
+      "version": "7.0.0"
       },
       {
       "modId": "6174A376E06661BF",
@@ -137,19 +327,19 @@
       "version": "1.0.1"
       },
       {
-      "modId": "611CB1D409001EB0",
-      "name": "ACE Magazine Repack",
-      "version": "1.4.3"
-      },
-      {
-      "modId": "67269AA718F11901",
-      "name": "Freedom Fighters Logistic",
-      "version": "1.0.38"
+      "modId": "61B84088181A8FA4",
+      "name": "Motorbike",
+      "version": "1.0.20"
       },
       {
       "modId": "631CD0023FD58D35",
       "name": "Realism Overhaul - AI",
       "version": "1.6.2"
+      },
+      {
+      "modId": "62A668F513428630",
+      "name": "WCS_Scopes",
+      "version": "7.0.2"
       },
       {
       "modId": "5E0AB16BEB16D6A4",
@@ -162,13 +352,38 @@
       "version": "1.4.3"
       },
       {
+      "modId": "61E42AE6714A3CC2",
+      "name": "WCS_Armbands",
+      "version": "7.0.1"
+      },
+      {
+      "modId": "6528B3CE24C85120",
+      "name": "WCS_JLTV_Upgrade",
+      "version": "7.0.3"
+      },
+      {
+      "modId": "6326F0C7E748AB8A",
+      "name": "WCS_AH-64D_Upgrade",
+      "version": "7.0.0"
+      },
+      {
       "modId": "5B383D4CB27E0D54",
       "name": "BMP-3 IFV",
       "version": "1.1.8"
       },
       {
+      "modId": "686AC479236F235D",
+      "name": "M777 Howitzer Artillery",
+      "version": "2.1.2"
+      },
+      {
       "modId": "63120AE07E6C0966",
       "name": "M2 Bradley Fighting Vehicle",
+      "version": "7.0.1"
+      },
+      {
+      "modId": "6608EB45061AFC69",
+      "name": "WCS_Mi-24V_Upgrade",
       "version": "7.0.0"
       },
       {
@@ -177,39 +392,39 @@
       "version": "1.0.105"
       },
       {
-      "modId": "64475DC102F2BDA4",
-      "name": "ACE Radio",
-      "version": "1.4.3"
+      "modId": "615818DA7C0343FD",
+      "name": "WCS_RU",
+      "version": "7.0.0"
       },
       {
-      "modId": "65FB5265B4F72F4B",
-      "name": "ToH ReCharacters Russian",
-      "version": "1.2.0"
+      "modId": "6052A9DD45564825",
+      "name": "You can sit",
+      "version": "1.0.8"
       },
       {
-      "modId": "606C369BAC3F6CC3",
-      "name": "ACE Finger",
-      "version": "1.4.3"
+      "modId": "68F006D910E7546F",
+      "name": "WCS_Weapon_Scripts",
+      "version": "7.0.1"
+      },
+      {
+      "modId": "685EDA5A6ACD53C5",
+      "name": "WCS_Suppression",
+      "version": "7.0.1"
+      },
+      {
+      "modId": "63294BA2D9F0339B",
+      "name": "WCS_ZU-23-2",
+      "version": "7.0.0"
       },
       {
       "modId": "686CFA003A78E005",
       "name": "FF - Modern Opposition V2",
-      "version": "2.0.9"
+      "version": "2.0.10"
       },
       {
-      "modId": "689EDED542F881AF",
-      "name": "DarcChopper",
-      "version": "1.0.20"
-      },
-      {
-      "modId": "6273146ADFE8241D",
-      "name": "WCS_AH-6M",
-      "version": "7.0.0"
-      },
-      {
-      "modId": "66C3548C8143586B",
-      "name": "Disable Film Grain",
-      "version": "1.0.1"
+      "modId": "6152CB0BD0684837",
+      "name": "WCS_Clothing",
+      "version": "7.0.2"
       },
       {
       "modId": "68D0CAA32B2D4870",
