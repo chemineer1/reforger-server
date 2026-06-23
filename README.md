@@ -35,8 +35,6 @@ publicAddress
 
 Keep `bindAddress` and `publicAddress` empty unless you have a specific reason to bind or advertise a specific address. The current dedicated server binary rejects `bindPort: 0`, and it requires `a2s.address` to be an IPv4 address when the `a2s` block is present, so this template keeps the documented/default ports explicit and uses `0.0.0.0` for A2S binding.
 
-RCON is enabled on `19999/udp`, matching the Compose port mapping. Change `rcon.password` before exposing the server.
-
 ## Scenario Profiles
 
 The base Compose service is scenario-agnostic. It mounts only `config/config.json`
@@ -101,8 +99,7 @@ docker compose up -d
 ```
 
 On an EC2 host, use the update procedure in `deploy/README.md` so the container
-and idle shutdown service are stopped and restarted cleanly around the SteamCMD
-update.
+and host agent are stopped and restarted cleanly around the SteamCMD update.
 
 The Compose service uses Docker's `unless-stopped` restart policy. If the
 server keeps restarting after repeated failures, check the logs before starting
@@ -129,7 +126,8 @@ reforger_profile
 
 ## AWS EC2
 
-AWS host setup and the 30-minute zero-player shutdown watcher live in:
+AWS host setup, ready notifications, and the 30-minute zero-player shutdown
+watcher live in:
 
 ```text
 deploy
@@ -147,8 +145,8 @@ See `deploy/README.md` before installing on an EC2 instance.
 |-- docker-entrypoint.sh         # Container startup and SteamCMD/update logic
 |-- config/                      # Tracked example configs; local secrets are ignored
 `-- deploy/
-    |-- install-systemd.sh       # Installs the idle shutdown service on EC2
+    |-- install-systemd.sh       # Installs the host agent service on EC2
     |-- systemd/                 # Host service unit
-    |-- idle-shutdown/           # Zero-player EC2 shutdown watcher
+    |-- host-agent/              # Ready notifications and idle shutdown
     `-- discord-lambda/          # Optional Discord slash-command Lambda
 ```

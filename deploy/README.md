@@ -1,7 +1,7 @@
 # AWS EC2 Deployment
 
 This setup runs the Reforger server with Docker Compose and uses a host-side
-systemd service to stop the EC2 instance after 30 minutes with zero players.
+systemd agent for server-ready notifications and zero-player EC2 shutdown.
 
 ## Fast Boot Model
 
@@ -19,7 +19,7 @@ server files.
 ## EC2 Settings
 
 Use an EBS-backed instance and set **Instance initiated shutdown behavior** to
-`Stop`. The idle watcher calls:
+`Stop`. The host agent calls:
 
 ```sh
 /sbin/shutdown -h now
@@ -33,7 +33,6 @@ Open the required UDP ports in the instance security group:
 ```text
 2001/udp   game traffic
 17777/udp  Steam A2S query
-19999/udp  RCON, restrict this to your admin IP
 ```
 
 Keep SSH restricted to your IP.
@@ -70,22 +69,31 @@ Create local config files:
 ```sh
 cp config/config.example.json config/config.json
 cp config/FreedomFighters_ServerConfig.example.json config/FreedomFighters_ServerConfig.json
-cp config/ec2-idle.env.example config/ec2-idle.env
+cp config/ec2-agent.env.example config/ec2-agent.env
 ```
 
 Edit `config/config.json` and change at least:
 
 ```text
 game.passwordAdmin
-rcon.password
 publicAddress
 ```
 
-Set the same RCON password in `config/ec2-idle.env`:
+To announce when the game server is actually reachable, add a Discord webhook
+URL to `config/ec2-agent.env`:
 
 ```text
-RCON_PASSWORD=your-rcon-password
+DISCORD_READY_WEBHOOK_URL=https://discord.com/api/webhooks/...
+DISCORD_READY_MESSAGE=Arma Reforger server is online and ready to join.
 ```
+
+The host agent sends this message once per EC2 boot after the first successful
+A2S player-count query. That is later than Docker startup and lines up with the
+server responding on its query port.
+
+Existing hosts that already have `config/ec2-idle.env` can keep it temporarily;
+the systemd unit reads it as a compatibility fallback. Prefer
+`config/ec2-agent.env` for new setup and future edits.
 
 Edit `config/FreedomFighters_ServerConfig.json` with your Discord webhook URL.
 Compose mounts that file as a read-only secret and copies it into
@@ -101,12 +109,12 @@ docker compose logs -f server
 ```
 
 When the server has finished downloading files and reached normal startup,
-install and start the idle shutdown service:
+install and start the host agent:
 
 ```sh
 deploy/install-systemd.sh
 docker compose up -d
-sudo systemctl start reforger-idle-shutdown.service
+sudo systemctl start reforger-host-agent.service
 ```
 
 Leave the Compose container created. The `restart: unless-stopped` policy in
@@ -124,9 +132,9 @@ The AWS deployment files are grouped by responsibility:
 
 ```text
 deploy/
-|-- install-systemd.sh       # Copies and enables the idle shutdown service
+|-- install-systemd.sh       # Copies and enables the host agent service
 |-- systemd/                 # systemd unit file installed into /etc/systemd/system
-|-- idle-shutdown/           # Python watcher that shuts down an idle EC2 host
+|-- host-agent/              # Host-side notifications and idle shutdown
 `-- discord-lambda/          # Optional Discord slash-command Lambda
 ```
 
@@ -137,13 +145,13 @@ From `/opt/reforger-server`:
 ```sh
 deploy/install-systemd.sh
 docker compose up -d
-sudo systemctl start reforger-idle-shutdown.service
+sudo systemctl start reforger-host-agent.service
 ```
 
 Check status:
 
 ```sh
-sudo systemctl status reforger-idle-shutdown.service
+sudo systemctl status reforger-host-agent.service
 docker compose ps
 ```
 
@@ -151,23 +159,18 @@ Follow logs:
 
 ```sh
 docker compose logs -f server
-journalctl -u reforger-idle-shutdown.service -f
+journalctl -u reforger-host-agent.service -f
 ```
 
 ## Idle Shutdown
 
-The watcher checks the Reforger player count once per minute. By default it
-tries `127.0.0.1:19999` using Reforger RCON and runs `#players`; if that query
-fails, it falls back to the Steam A2S endpoint on `127.0.0.1:17777`. If a
-configured source reports zero players continuously for 30 minutes, it shuts
-down the OS.
+The host agent checks the Reforger player count once per minute using the Steam
+A2S endpoint on `127.0.0.1:17777`. If A2S reports zero players continuously for
+30 minutes, it shuts down the OS.
 
-The defaults are set in `deploy/systemd/reforger-idle-shutdown.service`:
+The defaults are set in `deploy/systemd/reforger-host-agent.service`:
 
 ```text
-PLAYER_COUNT_SOURCE=rcon,a2s
-RCON_HOST=127.0.0.1
-RCON_PORT=19999
 A2S_HOST=127.0.0.1
 A2S_PORT=17777
 IDLE_SECONDS=1800
@@ -176,14 +179,14 @@ STARTUP_GRACE_SECONDS=600
 IDLE_ON_QUERY_FAILURE=0
 ```
 
-`PLAYER_COUNT_SOURCE` can be `rcon`, `a2s`, or an ordered fallback list such as
-`rcon,a2s`. You do not need both RCON and A2S, but keeping A2S as a fallback
-prevents a bad RCON password or transient RCON failure from being the only
-signal.
-
 `IDLE_ON_QUERY_FAILURE=0` means failed player-count checks do not count as idle.
 Set it to `1` only if you want a broken or unreachable local server to stop the
 instance after the startup grace period plus idle threshold.
+
+If `DISCORD_READY_WEBHOOK_URL` is set, the host agent posts
+`DISCORD_READY_MESSAGE` once when the first A2S player-count query succeeds. The
+default state file is `/run/reforger-ready-notified`, so repeated systemd
+restarts during the same EC2 boot do not resend the ready message.
 
 ## Updating The Server
 
@@ -192,7 +195,7 @@ server executable already exists. To update the server during planned
 maintenance:
 
 ```sh
-sudo systemctl stop reforger-idle-shutdown.service
+sudo systemctl stop reforger-host-agent.service
 docker compose stop
 docker compose run --rm --entrypoint /opt/steamcmd/steamcmd.sh server \
   +force_install_dir /home/steam/reforger \
@@ -200,7 +203,7 @@ docker compose run --rm --entrypoint /opt/steamcmd/steamcmd.sh server \
   +app_update 1874900 \
   +quit
 docker compose up -d
-sudo systemctl start reforger-idle-shutdown.service
+sudo systemctl start reforger-host-agent.service
 ```
 
 If you suspect corrupted files, add `validate` before `+quit`.

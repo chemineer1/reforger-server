@@ -55,7 +55,7 @@ COPY --chmod=0755 docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 USER steam
 WORKDIR /home/steam
 
-EXPOSE 2001/udp 17777/udp 19999/udp
+EXPOSE 2001/udp 17777/udp
 
 # Compose supplies `init: true`; this script can therefore run directly as PID 1
 # under Docker's built-in init wrapper.

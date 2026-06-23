@@ -1,5 +1,5 @@
 [Unit]
-Description=Stop EC2 when Arma Reforger has no players
+Description=Arma Reforger EC2 host automation
 After=network-online.target docker.service
 Requires=docker.service
 Wants=network-online.target
@@ -8,18 +8,15 @@ Wants=network-online.target
 Type=simple
 Environment=A2S_HOST=127.0.0.1
 Environment=A2S_PORT=17777
-Environment=PLAYER_COUNT_SOURCE=rcon,a2s
-Environment=RCON_HOST=127.0.0.1
-Environment=RCON_PORT=19999
-Environment=RCON_PASSWORD=change-me
-Environment=RCON_COMMAND=#players
 Environment=IDLE_SECONDS=1800
 Environment=CHECK_INTERVAL_SECONDS=60
 Environment=STARTUP_GRACE_SECONDS=600
 Environment=IDLE_ON_QUERY_FAILURE=0
 Environment="SHUTDOWN_COMMAND=/sbin/shutdown -h now"
+# Keep the old env filename as a compatibility fallback for existing hosts.
 EnvironmentFile=-/opt/reforger-server/config/ec2-idle.env
-ExecStart=/usr/bin/python3 /opt/reforger-server/deploy/idle-shutdown/reforger_idle_shutdown.py
+EnvironmentFile=-/opt/reforger-server/config/ec2-agent.env
+ExecStart=/usr/bin/python3 /opt/reforger-server/deploy/host-agent/reforger_host_agent.py
 Restart=always
 RestartSec=30
 

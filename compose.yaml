@@ -22,15 +22,12 @@ services:
       SERVER_MAX_FPS: "60"
       CONFIG_FILE: /run/configs/reforger-server.json
     ports:
-      # Game traffic, Steam A2S query, and optional RCON.
+      # Game traffic and Steam A2S query.
       - target: 2001
         published: "2001"
         protocol: udp
       - target: 17777
         published: "17777"
-        protocol: udp
-      - target: 19999
-        published: "19999"
         protocol: udp
     volumes:
       # Mutable runtime state. These survive container rebuilds/recreates.
