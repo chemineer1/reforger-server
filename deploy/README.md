@@ -91,10 +91,6 @@ The host agent sends this message once per EC2 boot after the first successful
 A2S player-count query. That is later than Docker startup and lines up with the
 server responding on its query port.
 
-Existing hosts that already have `config/ec2-idle.env` can keep it temporarily;
-the systemd unit reads it as a compatibility fallback. Prefer
-`config/ec2-agent.env` for new setup and future edits.
-
 Edit `config/FreedomFighters_ServerConfig.json` with your Discord webhook URL.
 Compose mounts that file as a read-only secret and copies it into
 `/home/steam/profile/FreedomFighters_ServerConfig.json`, so restart the server
