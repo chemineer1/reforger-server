@@ -19,7 +19,7 @@ COMMANDS ={
         {
             "type": 1,
             "name": "status",
-            "description": "Show EC2 instance state.",
+            "description": "Show the status of the EC2 instance.",
         },
     ],
 }

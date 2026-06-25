@@ -1,6 +1,9 @@
 import base64
 import json
 import os
+import socket
+import struct
+from dataclasses import dataclass
 
 import boto3
 from nacl.exceptions import BadSignatureError
@@ -12,8 +15,23 @@ INTERACTION_APPLICATION_COMMAND = 2
 RESPONSE_PONG = 1
 RESPONSE_CHANNEL_MESSAGE_WITH_SOURCE = 4
 EPHEMERAL = 1 << 6
+A2S_QUERY = b"\xff\xff\xff\xffTSource Engine Query\x00"
+S2A_INFO = 0x49
+S2A_CHALLENGE = 0x41
 
 ec2 = boto3.client("ec2")
+
+
+class A2SQueryError(RuntimeError):
+    """Raised when a live A2S query cannot return usable server info."""
+
+
+@dataclass(frozen=True)
+class A2SInfo:
+    name: str
+    map_name: str
+    players: int
+    max_players: int
 
 
 def response(status_code, payload):
@@ -93,6 +111,20 @@ def instance_id():
     return value
 
 
+def env_int(name, default):
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return int(value)
+
+
+def env_float(name, default):
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return float(value)
+
+
 def describe_instance():
     result = ec2.describe_instances(InstanceIds=[instance_id()])
     reservations = result.get("Reservations", [])
@@ -127,10 +159,88 @@ def stop_server():
     return "Stopping Reforger EC2 instance."
 
 
+def read_c_string(payload, offset):
+    try:
+        end = payload.index(0, offset)
+    except ValueError as error:
+        raise A2SQueryError("missing string terminator") from error
+    return payload[offset:end].decode("utf-8", errors="replace"), end + 1
+
+
+def parse_a2s_info_response(response):
+    if not response.startswith(b"\xff\xff\xff\xff"):
+        raise A2SQueryError("unsupported split or malformed A2S response")
+
+    payload = response[4:]
+    if not payload or payload[0] != S2A_INFO:
+        raise A2SQueryError("unexpected A2S response type")
+
+    offset = 2
+    try:
+        name, offset = read_c_string(payload, offset)
+        map_name, offset = read_c_string(payload, offset)
+        _, offset = read_c_string(payload, offset)  # folder
+        _, offset = read_c_string(payload, offset)  # game
+        offset += struct.calcsize("<H")  # Steam app ID
+        players = payload[offset]
+        max_players = payload[offset + 1]
+    except IndexError as error:
+        raise A2SQueryError("truncated A2S response") from error
+
+    return A2SInfo(
+        name=name,
+        map_name=map_name,
+        players=players,
+        max_players=max_players,
+    )
+
+
+def query_a2s_info(host, port, timeout):
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+            sock.settimeout(timeout)
+            sock.sendto(A2S_QUERY, (host, port))
+            response, _ = sock.recvfrom(4096)
+
+            if not response.startswith(b"\xff\xff\xff\xff"):
+                raise A2SQueryError("unsupported split or malformed A2S response")
+
+            payload = response[4:]
+            if payload and payload[0] == S2A_CHALLENGE:
+                if len(payload) < 5:
+                    raise A2SQueryError("malformed A2S challenge response")
+                sock.sendto(A2S_QUERY + payload[1:5], (host, port))
+                response, _ = sock.recvfrom(4096)
+
+            return parse_a2s_info_response(response)
+    except (OSError, socket.timeout) as error:
+        raise A2SQueryError("A2S query failed") from error
+
+
 def server_status():
     instance = describe_instance()
-    public_ip = f"\nPublic IP: {instance['public_ip']}" if instance["public_ip"] else ""
-    return f"Reforger EC2 instance is {instance['state']}.{public_ip}"
+    lines = [f"Reforger EC2 instance is {instance['state']}."]
+
+    if instance["state"] == "running" and instance["public_ip"]:
+        try:
+            server = query_a2s_info(
+                instance["public_ip"],
+                env_int("A2S_PORT", 17777),
+                env_float("A2S_TIMEOUT_SECONDS", 3),
+            )
+        except A2SQueryError:
+            lines.append(f"Public IP: {instance['public_ip']}")
+            lines.append("Game query: unavailable")
+        else:
+            lines.append(f"Server: {server.name}")
+            lines.append(f"Players: {server.players}/{server.max_players}")
+            if server.map_name:
+                lines.append(f"Map: {server.map_name}")
+            lines.append(f"Public IP: {instance['public_ip']}")
+    elif instance["public_ip"]:
+        lines.append(f"Public IP: {instance['public_ip']}")
+
+    return "\n".join(lines)
 
 
 def subcommand_name(interaction):

@@ -29,6 +29,8 @@ Resources:
           EC2_INSTANCE_ID: !Ref InstanceId
           DISCORD_PUBLIC_KEY: !Ref DiscordPublicKey
           DISCORD_ALLOWED_USER_IDS: !Ref DiscordAllowedUserIds
+          A2S_PORT: "17777"
+          A2S_TIMEOUT_SECONDS: "3"
       FunctionUrlConfig:
         AuthType: NONE
       Policies:
