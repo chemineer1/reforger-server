@@ -1,7 +1,26 @@
-config/config.json
-config/FreedomFighters_ServerConfig.json
-config/ec2-idle.env
+# Local configuration and secrets
+/config/config.json
+/config/FreedomFighters_ServerConfig.json
+/config/*.env
+!/config/*.env.example
+/secrets
+
+# Python
 __pycache__/
-secrets
-.aws-sam/
+*.py[cod]
 .venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# AWS SAM
+.aws-sam/
+
+# Build and runtime output
+target/
+*.log
+*.tmp
+
+# OS/editor noise
+.DS_Store
