@@ -1,5 +1,6 @@
 import base64
 import json
+import logging
 import os
 import socket
 import struct
@@ -18,8 +19,10 @@ EPHEMERAL = 1 << 6
 A2S_QUERY = b"\xff\xff\xff\xffTSource Engine Query\x00"
 S2A_INFO = 0x49
 S2A_CHALLENGE = 0x41
+DISPLAY_FIELD_MAX_LENGTH = 120
 
 ec2 = boto3.client("ec2")
+logger = logging.getLogger(__name__)
 
 
 class A2SQueryError(RuntimeError):
@@ -50,6 +53,7 @@ def interaction_message(content):
             "data": {
                 "content": content,
                 "flags": EPHEMERAL,
+                "allowed_mentions": {"parse": []},
             },
         },
     )
@@ -111,6 +115,27 @@ def instance_id():
     return value
 
 
+def safe_display(value, fallback="unknown", max_length=DISPLAY_FIELD_MAX_LENGTH):
+    if value is None:
+        text = ""
+    else:
+        text = str(value)
+
+    text = "".join(
+        " " if ord(character) < 32 or ord(character) == 127 else character
+        for character in text
+    )
+    text = text.replace("@", "[at]").strip()
+
+    if not text:
+        text = fallback
+
+    if len(text) > max_length:
+        text = text[: max_length - 3].rstrip() + "..."
+
+    return text
+
+
 def env_int(name, default):
     value = os.environ.get(name)
     if value is None:
@@ -144,7 +169,7 @@ def describe_instance():
 def start_server():
     before = describe_instance()
     if before["state"] in {"running", "pending"}:
-        return f"Reforger EC2 instance is already {before['state']}."
+        return f"Reforger EC2 instance is already {safe_display(before['state'])}."
 
     ec2.start_instances(InstanceIds=[instance_id()])
     return "Starting Reforger EC2 instance."
@@ -153,7 +178,7 @@ def start_server():
 def stop_server():
     before = describe_instance()
     if before["state"] in {"stopped", "stopping"}:
-        return f"Reforger EC2 instance is already {before['state']}."
+        return f"Reforger EC2 instance is already {safe_display(before['state'])}."
 
     ec2.stop_instances(InstanceIds=[instance_id()])
     return "Stopping Reforger EC2 instance."
@@ -219,7 +244,8 @@ def query_a2s_info(host, port, timeout):
 
 def server_status():
     instance = describe_instance()
-    lines = [f"Reforger EC2 instance is {instance['state']}."]
+    public_ip = safe_display(instance["public_ip"])
+    lines = [f"Reforger EC2 instance is {safe_display(instance['state'])}."]
 
     if instance["state"] == "running" and instance["public_ip"]:
         try:
@@ -229,16 +255,16 @@ def server_status():
                 env_float("A2S_TIMEOUT_SECONDS", 3),
             )
         except A2SQueryError:
-            lines.append(f"Public IP: {instance['public_ip']}")
+            lines.append(f"Public IP: {public_ip}")
             lines.append("Game query: unavailable")
         else:
-            lines.append(f"Server: {server.name}")
+            lines.append(f"Server: {safe_display(server.name)}")
             lines.append(f"Players: {server.players}/{server.max_players}")
             if server.map_name:
-                lines.append(f"Map: {server.map_name}")
-            lines.append(f"Public IP: {instance['public_ip']}")
+                lines.append(f"Map: {safe_display(server.map_name)}")
+            lines.append(f"Public IP: {public_ip}")
     elif instance["public_ip"]:
-        lines.append(f"Public IP: {instance['public_ip']}")
+        lines.append(f"Public IP: {public_ip}")
 
     return "\n".join(lines)
 
@@ -248,6 +274,10 @@ def subcommand_name(interaction):
     if options:
         return options[0].get("name")
     return interaction.get("data", {}).get("name")
+
+
+def request_id(context):
+    return safe_display(getattr(context, "aws_request_id", None))
 
 
 def lambda_handler(event, context):
@@ -275,6 +305,9 @@ def lambda_handler(event, context):
             return interaction_message(server_status())
 
         return interaction_message("Unknown Reforger command.")
-    except Exception as error:
-        print(f"command failed: {error}", flush=True)
-        return interaction_message(f"Command failed: {error}")
+    except Exception:
+        current_request_id = request_id(context)
+        logger.exception("command failed for request %s", current_request_id)
+        return interaction_message(
+            f"Command failed. Check Lambda logs for request {current_request_id}."
+        )

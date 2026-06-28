@@ -1,3 +1,4 @@
+import json
 import os
 import struct
 import sys
@@ -14,6 +15,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import app  # noqa: E402
 
 
+class LambdaContext:
+    aws_request_id = "test-request-123"
+
+
 def a2s_response(name="Reforger Test", map_name="Everon", players=0, max_players=8):
     payload = bytearray([app.S2A_INFO, 17])
     payload.extend(name.encode("utf-8") + b"\x00")
@@ -23,6 +28,10 @@ def a2s_response(name="Reforger Test", map_name="Everon", players=0, max_players
     payload.extend(struct.pack("<H", 0))
     payload.extend(bytes([players, max_players, 0]))
     return b"\xff\xff\xff\xff" + bytes(payload)
+
+
+def interaction_content(result):
+    return json.loads(result["body"])["data"]["content"]
 
 
 def test_parse_a2s_info_response_reads_name_map_and_players():
@@ -123,3 +132,72 @@ def test_server_status_hides_a2s_errors(monkeypatch):
             "Game query: unavailable",
         ]
     )
+
+
+def test_interaction_message_disables_allowed_mentions():
+    result = app.interaction_message("hello @everyone")
+    body = json.loads(result["body"])
+
+    assert body["data"]["flags"] == app.EPHEMERAL
+    assert body["data"]["allowed_mentions"] == {"parse": []}
+
+
+def test_lambda_handler_hides_raw_top_level_exception(monkeypatch):
+    monkeypatch.setattr(app, "verify_discord_request", lambda event: True)
+
+    def fail_status():
+        raise RuntimeError("secret failure details")
+
+    monkeypatch.setattr(app, "server_status", fail_status)
+
+    result = app.lambda_handler(
+        {
+            "body": json.dumps(
+                {
+                    "type": app.INTERACTION_APPLICATION_COMMAND,
+                    "data": {"options": [{"name": "status"}]},
+                }
+            ),
+            "headers": {},
+        },
+        LambdaContext(),
+    )
+
+    content = interaction_content(result)
+    assert content == "Command failed. Check Lambda logs for request test-request-123."
+    assert "secret failure details" not in content
+
+
+def test_server_status_sanitizes_dynamic_game_fields(monkeypatch):
+    monkeypatch.setattr(
+        app,
+        "describe_instance",
+        lambda: {
+            "id": "i-test",
+            "state": "running",
+            "public_ip": "203.0.113.10",
+            "type": "t3.small",
+        },
+    )
+    monkeypatch.setattr(
+        app,
+        "query_a2s_info",
+        lambda host, port, timeout: app.A2SInfo(
+            name="Bad\nName @everyone",
+            map_name="\t<@123456789>",
+            players=1,
+            max_players=8,
+        ),
+    )
+
+    result = app.server_status()
+
+    assert "Server: Bad Name [at]everyone" in result
+    assert "Map: <[at]123456789>" in result
+    assert "@everyone" not in result
+    assert "<@123456789>" not in result
+
+
+def test_safe_display_caps_length_and_uses_fallback():
+    assert app.safe_display("\n\t") == "unknown"
+    assert app.safe_display("x" * 200) == ("x" * 117) + "..."
