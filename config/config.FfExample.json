@@ -137,14 +137,14 @@
       "version": "1.0.5"
       },
       {
-      "modId": "6698F8DD1B444BEB",
-      "name": "DarcMissionsCompatFF",
-      "version": "1.0.21"
-      },
-      {
       "modId": "61D57616CAFBB23D",
       "name": "WCS_LoadoutEditor",
       "version": "7.0.1"
+      },
+      {
+      "modId": "6698F8DD1B444BEB",
+      "name": "DarcMissionsCompatFF",
+      "version": "1.0.21"
       },
       {
       "modId": "6303360DA719E832",
@@ -267,14 +267,14 @@
       "version": "1.6.2"
       },
       {
-      "modId": "5E0AB16BEB16D6A4",
-      "name": "T-72 Main Battle Tank",
-      "version": "1.2.20"
-      },
-      {
       "modId": "62A668F513428630",
       "name": "WCS_Scopes",
       "version": "7.0.3"
+      },
+      {
+      "modId": "5E0AB16BEB16D6A4",
+      "name": "T-72 Main Battle Tank",
+      "version": "1.2.20"
       },
       {
       "modId": "60E573C9B04CC408",
@@ -285,11 +285,6 @@
       "modId": "A8F3C2E1D04B5697",
       "name": "FF-WCS-Persistence-Fix",
       "version": "0.0.3"
-      },
-      {
-      "modId": "661F445FF0B4D696",
-      "name": "FF-SCAR by Ronno",
-      "version": "1.0.8"
       },
       {
       "modId": "61E42AE6714A3CC2",
@@ -312,14 +307,14 @@
       "version": "7.0.2"
       },
       {
-      "modId": "64CB39E57377C861",
-      "name": "WCS_AH-1S",
-      "version": "7.0.0"
-      },
-      {
       "modId": "686F40579B43E036",
       "name": "FF - Stryker",
       "version": "1.0.0"
+      },
+      {
+      "modId": "64CB39E57377C861",
+      "name": "WCS_AH-1S",
+      "version": "7.0.0"
       },
       {
       "modId": "66CCC388B54E9281",
@@ -425,11 +420,6 @@
       "modId": "686CFA003A78E005",
       "name": "FF - Modern Opposition V2",
       "version": "2.0.10"
-      },
-      {
-      "modId": "616478A18DC7DCB6",
-      "name": "FN SCAR -HEAVY and LIGHT-",
-      "version": "1.6.7"
       },
       {
       "modId": "6152CB0BD0684837",
